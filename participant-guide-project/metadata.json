@@ -1,0 +1,8 @@
+{
+  "name": "VidaCare",
+  "description": "VidaCare — Together, We Make Healing Possible. A compassionate medical crowdfunding platform connecting patients with verified treatment support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
