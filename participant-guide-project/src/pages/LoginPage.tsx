@@ -149,7 +149,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'login' }) =
       return;
     }
     setLoginSuccess('Sign-in successful. Redirecting to your dashboard…');
-    const dest = getDashboardPathForRole(result.role);
+    const dest = getDashboardPathForRole(result.user?.role);
     setTimeout(() => navigate(dest, { replace: true }), 400);
   };
 

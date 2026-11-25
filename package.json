@@ -1,0 +1,13 @@
+{
+  "name": "vidacare-workspace",
+  "private": true,
+  "workspaces": [
+    "participant-guide-project"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=react-example",
+    "build": "npm run build --workspace=react-example",
+    "preview": "npm run preview --workspace=react-example",
+    "lint": "npm run lint --workspace=react-example"
+  }
+}
