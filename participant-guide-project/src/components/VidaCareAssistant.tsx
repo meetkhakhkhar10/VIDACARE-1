@@ -201,7 +201,7 @@ export const VidaCareAssistant: React.FC = () => {
         role="dialog"
         aria-label="VidaCare Assistant"
         aria-hidden={!isOpen}
-        className={`mb-3 flex w-[calc(100vw-2rem)] max-w-[410px] origin-bottom-right flex-col overflow-hidden rounded-2xl border border-sky-300/25 bg-[#070F22]/95 shadow-[0_24px_60px_-15px_rgba(2,6,23,0.95),0_0_40px_-14px_rgba(56,189,248,0.28)] backdrop-blur-xl transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`mb-3 flex w-[calc(100vw-2rem)] max-w-[410px] origin-bottom-right flex-col overflow-hidden rounded-2xl border border-[#123C35]/18 bg-white shadow-[0_24px_60px_-15px_rgba(18,60,53,0.22),0_4px_16px_rgba(18,60,53,0.08)] transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen
             ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
             : 'pointer-events-none translate-y-3 scale-95 opacity-0 h-0 border-0 shadow-none mb-0'
@@ -213,16 +213,16 @@ export const VidaCareAssistant: React.FC = () => {
         }
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b vc-hairline bg-[#0B1630]/90 px-4 py-3.5">
+        <div className="flex items-start justify-between gap-3 border-b border-[#123C35]/12 bg-[#123C35] px-4 py-3.5 text-white">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-300/35 bg-amber-300/10 text-amber-300">
-              <BrandMark className="h-5 w-5" />
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/15">
+              <BrandMark className="h-5 w-5" inverted />
             </div>
             <div className="min-w-0">
-              <h2 className="truncate font-display text-base font-semibold text-slate-50">
+              <h2 className="truncate font-display text-base font-bold text-white">
                 VidaCare Assistant
               </h2>
-              <p className="truncate text-[11px] text-slate-400">
+              <p className="truncate text-[11px] text-[#DDF3E9]">
                 Automated Helper · Not Medical Advice
               </p>
             </div>
@@ -234,7 +234,7 @@ export const VidaCareAssistant: React.FC = () => {
               onClick={handleClearChat}
               title="Clear chat history"
               aria-label="Clear chat history"
-              className="inline-flex h-8 items-center gap-1 rounded-lg border border-slate-800 bg-slate-900/80 px-2.5 text-[11px] font-medium text-slate-300 transition-colors hover:border-amber-300/40 hover:text-amber-200"
+              className="inline-flex h-8 items-center gap-1 rounded-xl border border-white/25 bg-white/10 px-2.5 text-[11px] font-medium text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Clear</span>
@@ -243,7 +243,7 @@ export const VidaCareAssistant: React.FC = () => {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close VidaCare Assistant"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/80 text-slate-300 transition-colors hover:border-sky-300/40 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -251,37 +251,37 @@ export const VidaCareAssistant: React.FC = () => {
         </div>
 
         {/* Always-Accessible Portal Navigation Strip */}
-        <div className="flex items-center gap-3 overflow-x-auto border-b vc-hairline bg-[#060D1E]/90 px-4 py-2 text-[11px] font-medium text-slate-300">
+        <div className="flex items-center gap-3 overflow-x-auto border-b border-[#123C35]/12 bg-[#DDF3E9]/65 px-4 py-2 text-[11px] font-semibold text-[#123C35]">
           <Link
             to="/campaigns"
-            className="whitespace-nowrap shrink-0 transition-colors hover:text-amber-300"
+            className="whitespace-nowrap shrink-0 transition-colors hover:text-[#159B79]"
           >
             Campaigns
           </Link>
-          <span aria-hidden="true" className="text-slate-700">
+          <span aria-hidden="true" className="text-[#414846]/50">
             ·
           </span>
           <Link
-            to="/dashboard"
-            className="whitespace-nowrap shrink-0 transition-colors hover:text-teal-300"
+            to="/start-fundraiser"
+            className="whitespace-nowrap shrink-0 transition-colors hover:text-[#159B79]"
           >
-            Create Fundraiser
+            Start Fundraiser
           </Link>
-          <span aria-hidden="true" className="text-slate-700">
+          <span aria-hidden="true" className="text-[#414846]/50">
             ·
           </span>
           <Link
             to="/login"
-            className="whitespace-nowrap shrink-0 transition-colors hover:text-sky-300"
+            className="whitespace-nowrap shrink-0 transition-colors hover:text-[#159B79]"
           >
             Login
           </Link>
-          <span aria-hidden="true" className="text-slate-700">
+          <span aria-hidden="true" className="text-[#414846]/50">
             ·
           </span>
           <Link
             to="/signup"
-            className="whitespace-nowrap shrink-0 transition-colors hover:text-sky-300"
+            className="whitespace-nowrap shrink-0 transition-colors hover:text-[#159B79]"
           >
             Signup
           </Link>
@@ -290,7 +290,7 @@ export const VidaCareAssistant: React.FC = () => {
         {/* Chat Thread */}
         <div
           aria-live="polite"
-          className="flex flex-1 flex-col gap-3.5 overflow-y-auto px-4 py-4"
+          className="flex flex-1 flex-col gap-3.5 overflow-y-auto bg-[#F8FAF7] px-4 py-4"
         >
           {messages.map((msg) => {
             const isUser = msg.sender === 'user';
@@ -302,27 +302,29 @@ export const VidaCareAssistant: React.FC = () => {
                 }`}
               >
                 <div
-                  className={`max-w-[90%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                  className={`max-w-[90%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-xs ${
                     isUser
-                      ? 'border border-amber-300/35 bg-amber-300/15 text-amber-50'
+                      ? 'bg-[#123C35] text-white'
                       : msg.isError
-                      ? 'border border-rose-400/35 bg-rose-950/35 text-rose-100'
-                      : 'border border-slate-800/90 bg-slate-900/85 text-slate-200'
+                      ? 'border border-red-200 bg-red-50 text-red-900'
+                      : 'border border-[#123C35]/14 bg-white text-[#131E1C]'
                   }`}
                 >
                   {msg.isError && (
-                    <div className="mb-1 flex items-center gap-1.5 font-semibold text-rose-300">
+                    <div className="mb-1 flex items-center gap-1.5 font-semibold text-red-700">
                       <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                       <span>Response Interrupted</span>
                     </div>
                   )}
-                  <p>{msg.text}</p>
+                  <p className={isUser ? 'text-white' : msg.isError ? 'text-red-900' : 'text-[#131E1C]'}>
+                    {msg.text}
+                  </p>
 
                   {msg.isError && lastFailedPrompt && (
                     <button
                       type="button"
                       onClick={() => void sendQuery(lastFailedPrompt)}
-                      className="mt-2 inline-flex items-center rounded-md border border-rose-300/40 bg-rose-900/40 px-2.5 py-1 text-[11px] font-medium text-rose-100 hover:bg-rose-900/60"
+                      className="mt-2 inline-flex items-center rounded-xl border border-red-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-red-700 hover:bg-red-100"
                     >
                       Retry Question
                     </button>
@@ -330,30 +332,30 @@ export const VidaCareAssistant: React.FC = () => {
 
                   {/* Approved Matching Campaigns */}
                   {msg.campaigns && msg.campaigns.length > 0 && (
-                    <div className="mt-2.5 flex flex-col gap-2 border-t border-slate-800 pt-2.5">
+                    <div className="mt-2.5 flex flex-col gap-2 border-t border-[#123C35]/12 pt-2.5">
                       {msg.campaigns.map((c) => (
                         <Link
                           key={c.id}
                           to={`/campaigns/${c.id}`}
-                          className="group flex flex-col gap-1 rounded-xl border border-slate-800 bg-slate-950/75 p-2.5 transition-colors hover:border-amber-300/45"
+                          className="group flex flex-col gap-1 rounded-xl border border-[#123C35]/14 bg-[#F8FAF7] p-2.5 transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9]/55"
                         >
                           <div className="flex items-center justify-between gap-2 text-[11px]">
-                            <span className="inline-flex items-center gap-1 font-medium text-teal-300">
+                            <span className="inline-flex items-center gap-1 font-semibold text-[#159B79]">
                               <CheckCircle2 className="h-3 w-3 shrink-0" aria-hidden="true" />
                               <span>Approved · {c.category}</span>
                             </span>
                             <ArrowRight
-                              className="h-3 w-3 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-amber-300"
+                              className="h-3 w-3 text-[#414846] transition-transform group-hover:translate-x-0.5 group-hover:text-[#123C35]"
                               aria-hidden="true"
                             />
                           </div>
-                          <p className="font-medium text-slate-100 group-hover:text-amber-200">
+                          <p className="font-semibold text-[#123C35] group-hover:text-[#159B79]">
                             {c.title}
                           </p>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[11px] text-[#414846]">
                             {c.patientName} · {c.hospitalName}
                           </p>
-                          <p className="font-mono text-[11px] tabular-nums text-sky-300">
+                          <p className="vc-numeric text-[11px] font-semibold text-[#123C35]">
                             {formatINR(c.raisedAmount)} raised of{' '}
                             {formatINR(c.goalAmount)}
                           </p>
@@ -364,12 +366,12 @@ export const VidaCareAssistant: React.FC = () => {
 
                   {/* Functional Action Links */}
                   {msg.links && msg.links.length > 0 && (
-                    <div className="mt-2.5 flex flex-wrap gap-1.5 border-t border-slate-800/80 pt-2.5">
+                    <div className="mt-2.5 flex flex-wrap gap-1.5 border-t border-[#123C35]/12 pt-2.5">
                       {msg.links.map((lnk) => (
                         <Link
                           key={`${msg.id}-${lnk.to}-${lnk.label}`}
                           to={lnk.to}
-                          className="inline-flex items-center gap-1 rounded-lg border border-sky-400/35 bg-sky-400/10 px-2.5 py-1 text-[11px] font-medium text-sky-200 transition-colors hover:border-amber-300/50 hover:text-amber-200"
+                          className="inline-flex items-center gap-1 rounded-xl border border-[#123C35]/20 bg-[#DDF3E9]/70 px-2.5 py-1 text-[11px] font-semibold text-[#123C35] transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9]"
                         >
                           <span>{lnk.label}</span>
                           <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -387,7 +389,7 @@ export const VidaCareAssistant: React.FC = () => {
                         key={`${msg.id}-${suggestion}`}
                         type="button"
                         onClick={() => void sendQuery(suggestion)}
-                        className="rounded-lg border border-slate-800 bg-slate-950/75 px-2.5 py-1.5 text-left text-[11px] text-slate-300 transition-colors hover:border-amber-300/45 hover:text-amber-200"
+                        className="rounded-xl border border-[#123C35]/18 bg-white px-2.5 py-1.5 text-left text-[11px] font-medium text-[#123C35] transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9]"
                       >
                         {suggestion}
                       </button>
@@ -401,13 +403,13 @@ export const VidaCareAssistant: React.FC = () => {
           {/* Typing Animation */}
           {isTyping && (
             <div className="flex items-start">
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-800/90 bg-slate-900/85 px-3.5 py-2.5 text-xs text-slate-300">
-                <Bot className="h-3.5 w-3.5 text-teal-300" aria-hidden="true" />
-                <span className="text-[11px] text-slate-400">Checking VidaCare</span>
+              <div className="inline-flex items-center gap-2 rounded-2xl border border-[#123C35]/14 bg-white px-3.5 py-2.5 text-xs text-[#131E1C] shadow-xs">
+                <Bot className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
+                <span className="text-[11px] font-medium text-[#414846]">Checking VidaCare</span>
                 <span className="inline-flex items-center gap-1" aria-hidden="true">
-                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-amber-300 [animation-delay:0ms]" />
-                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-sky-300 [animation-delay:140ms]" />
-                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-teal-300 [animation-delay:280ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-[#123C35] [animation-delay:0ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-[#159B79] [animation-delay:140ms]" />
+                  <span className="h-1.5 w-1.5 animate-bounce motion-reduce:animate-none rounded-full bg-[#123C35]/60 [animation-delay:280ms]" />
                 </span>
               </div>
             </div>
@@ -420,10 +422,10 @@ export const VidaCareAssistant: React.FC = () => {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="border-t vc-hairline bg-[#060D1E]/95 p-3"
+          className="border-t border-[#123C35]/12 bg-white p-3"
         >
           {inputError && (
-            <p role="alert" className="mb-2 text-[11px] text-rose-300">
+            <p role="alert" className="mb-2 text-[11px] font-medium text-red-700">
               {inputError}
             </p>
           )}
@@ -441,13 +443,13 @@ export const VidaCareAssistant: React.FC = () => {
                 if (inputError) setInputError('');
               }}
               placeholder="Ask about donating, categories, or fundraisers..."
-              className="min-h-[42px] flex-1 rounded-xl border border-slate-800 bg-slate-950/85 px-3.5 text-xs text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+              className="vc-input min-h-[42px] flex-1 px-3.5 text-xs"
             />
             <button
               type="submit"
               disabled={isTyping}
               aria-label="Send message"
-              className="inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-teal-400 text-slate-950 transition-colors hover:bg-teal-300 disabled:opacity-50"
+              className="inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-[#123C35] text-white transition-colors hover:bg-[#159B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] disabled:opacity-50"
             >
               <Send className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -462,16 +464,16 @@ export const VidaCareAssistant: React.FC = () => {
           onClick={() => setIsOpen((prev) => !prev)}
           aria-expanded={isOpen}
           aria-controls="vidacare-assistant-panel"
-          className="inline-flex h-12 items-center gap-2.5 rounded-full border border-amber-300/40 bg-[#0A1328]/95 px-4 text-xs font-semibold text-slate-50 shadow-[0_12px_32px_-8px_rgba(2,6,23,0.9),0_0_24px_-8px_rgba(251,191,36,0.45)] backdrop-blur-xl transition-transform duration-150 hover:scale-[1.03] hover:border-amber-300/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 whitespace-nowrap shrink-0"
+          className="inline-flex h-12 items-center gap-2.5 rounded-xl border border-[#123C35]/20 bg-[#123C35] px-4 text-xs font-semibold text-white shadow-[0_12px_30px_-8px_rgba(18,60,53,0.45)] transition-all duration-150 hover:bg-[#159B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] focus-visible:ring-offset-2 whitespace-nowrap shrink-0"
         >
           {isOpen ? (
             <>
-              <X className="h-4 w-4 text-amber-300" aria-hidden="true" />
+              <X className="h-4 w-4 text-[#DDF3E9]" aria-hidden="true" />
               <span>Close Assistant</span>
             </>
           ) : (
             <>
-              <MessageSquare className="h-4 w-4 text-amber-300" aria-hidden="true" />
+              <MessageSquare className="h-4 w-4 text-[#DDF3E9]" aria-hidden="true" />
               <span>VidaCare Assistant</span>
             </>
           )}

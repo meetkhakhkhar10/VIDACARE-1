@@ -36,13 +36,11 @@ function evaluateStrength(pw: string): {
   return { label: 'Strong', score: 4, colorClass: 'bg-[#123C35]' };
 }
 
-const inputCls =
-  'vc-input';
+const inputCls = 'vc-input';
 
-const inputPwCls =
-  'min-h-[44px] w-full rounded-xl border-[1.5px] border-[rgba(18,60,53,0.2)] bg-white pr-10 pl-3.5 text-sm text-[#202B29] placeholder:text-[#9BAAA5] focus:border-[#159B79] focus:outline-none focus:ring-2 focus:ring-[#159B79]/15 transition-colors';
+const inputPwCls = 'vc-input pr-11';
 
-const labelCls = 'text-xs font-semibold text-[#3D5450]';
+const labelCls = 'text-xs font-semibold text-[#131E1C]';
 
 export const SignupPage: React.FC = () => {
   const { isEmailRegistered, registerAccount, getDashboardPathForRole } =
@@ -160,7 +158,7 @@ export const SignupPage: React.FC = () => {
               <h1 className="font-display text-3xl font-bold text-[#123C35]">
                 Get Started with VidaCare
               </h1>
-              <p className="text-sm text-[#71807A]">
+              <p className="text-sm text-[#414846]">
                 Choose your role and verify with our simulated OTP step.
               </p>
             </div>
@@ -191,13 +189,13 @@ export const SignupPage: React.FC = () => {
                   >
                     <HeartHandshake
                       className={`mt-0.5 h-4 w-4 shrink-0 ${
-                        role === 'Donor' ? 'text-[#159B79]' : 'text-[#71807A]'
+                        role === 'Donor' ? 'text-[#159B79]' : 'text-[#414846]'
                       }`}
                       aria-hidden="true"
                     />
                     <div>
-                      <p className={`text-sm font-semibold ${role === 'Donor' ? 'text-[#123C35]' : 'text-[#202B29]'}`}>Donor</p>
-                      <p className="text-[11px] text-[#71807A]">
+                      <p className={`text-sm font-semibold ${role === 'Donor' ? 'text-[#123C35]' : 'text-[#131E1C]'}`}>Donor</p>
+                      <p className="text-[11px] text-[#414846]">
                         Support patients &amp; track receipts
                       </p>
                     </div>
@@ -216,15 +214,15 @@ export const SignupPage: React.FC = () => {
                       className={`mt-0.5 h-4 w-4 shrink-0 ${
                         role === 'Patient/Fundraiser'
                           ? 'text-[#123C35]'
-                          : 'text-[#71807A]'
+                          : 'text-[#414846]'
                       }`}
                       aria-hidden="true"
                     />
                     <div>
-                      <p className={`text-sm font-semibold ${role === 'Patient/Fundraiser' ? 'text-[#123C35]' : 'text-[#202B29]'}`}>
+                      <p className={`text-sm font-semibold ${role === 'Patient/Fundraiser' ? 'text-[#123C35]' : 'text-[#131E1C]'}`}>
                         Patient / Fundraiser
                       </p>
-                      <p className="text-[11px] text-[#71807A]">
+                      <p className="text-[11px] text-[#414846]">
                         Raise verified medical funds
                       </p>
                     </div>
@@ -290,7 +288,7 @@ export const SignupPage: React.FC = () => {
                       if (errors.mobile) setErrors((p) => ({ ...p, mobile: undefined }));
                     }}
                     placeholder="+91 98765 43210"
-                    className={`${inputCls} font-mono`}
+                    className={`${inputCls} vc-numeric`}
                   />
                   {errors.mobile && (
                     <p role="alert" className="text-xs text-red-600 font-medium">
@@ -319,7 +317,7 @@ export const SignupPage: React.FC = () => {
                       type="button"
                       onClick={() => setShowPassword((s) => !s)}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#71807A] hover:text-[#123C35] transition-colors"
+                      className="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#414846] hover:text-[#123C35] transition-colors"
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -343,7 +341,7 @@ export const SignupPage: React.FC = () => {
                           />
                         ))}
                       </div>
-                      <span className="text-[11px] font-semibold text-[#71807A]">
+                      <span className="text-[11px] font-semibold text-[#414846]">
                         {strength.label}
                       </span>
                     </div>
@@ -382,7 +380,7 @@ export const SignupPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="inline-flex cursor-pointer items-start gap-2.5 text-xs text-[#71807A]">
+                <label className="inline-flex cursor-pointer items-start gap-2.5 text-xs text-[#414846]">
                   <input
                     type="checkbox"
                     checked={acceptedTerms}
@@ -416,7 +414,7 @@ export const SignupPage: React.FC = () => {
               </VidaButton>
             </form>
 
-            <p className="border-t vc-hairline pt-4 text-center text-xs text-[#71807A]">
+            <p className="border-t vc-hairline pt-4 text-center text-xs text-[#414846]">
               Already have an account?{' '}
               <Link
                 to="/login"
@@ -452,7 +450,7 @@ export const SignupPage: React.FC = () => {
                 Welcome to VidaCare, {fullName}.
               </h1>
             </div>
-            <p className="text-sm leading-relaxed text-[#71807A]">
+            <p className="text-sm leading-relaxed text-[#414846]">
               Your <span className="font-semibold text-[#123C35]">{role}</span>{' '}
               demo account is saved in LocalStorage and signed in. Continue to
               your personalized dashboard.
@@ -499,12 +497,12 @@ export const SignupPage: React.FC = () => {
                   type="button"
                   onClick={() => setShowTermsModal(false)}
                   aria-label="Close terms dialog"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-[rgba(18,60,53,0.15)] text-[#71807A] hover:text-[#123C35] hover:bg-[#DDF3E9] transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-xl border border-[rgba(18,60,53,0.15)] text-[#414846] hover:text-[#123C35] hover:bg-[#DDF3E9] transition-colors"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
                 </button>
               </div>
-              <p className="text-sm leading-relaxed text-[#71807A]">
+              <p className="text-sm leading-relaxed text-[#414846]">
                 VidaCare is currently running in frontend-only simulation mode.
                 Demo accounts, OTP checks, and mock donations are stored in your
                 browser's LocalStorage solely for interface verification. No real

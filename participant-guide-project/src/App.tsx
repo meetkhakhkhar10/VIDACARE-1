@@ -43,6 +43,14 @@ export default function App() {
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route
+                path="/dashboard/campaigner"
+                element={<DashboardPage portalMode="campaigner" />}
+              />
+              <Route
+                path="/dashboard/donor"
+                element={<DashboardPage portalMode="donor" />}
+              />
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

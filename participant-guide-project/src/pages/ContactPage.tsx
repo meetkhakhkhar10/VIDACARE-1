@@ -39,28 +39,39 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16">
+    <section className="bg-[#F8FAF7] py-12 sm:py-16">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="flex flex-col gap-6 lg:col-span-5">
             <SectionHeading
+              as="h1"
               kicker="Care Liaison Desk"
               title="Speak with Our Clinical Support Team"
               description="Questions regarding campaign verification, hospital billing coordination, or supporter receipts are answered within one business day."
             />
 
-            <GlassSurface className="flex flex-col gap-4 p-6 text-sm text-slate-300">
+            <GlassSurface className="flex flex-col gap-4 p-6 text-sm text-[#131E1C]">
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-teal-300 shrink-0" aria-hidden="true" />
-                <span>support@vidacare.org</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#DDF3E9] text-[#159B79]">
+                  <Mail className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="font-medium text-[#131E1C]">support@vidacare.org</span>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-teal-300 shrink-0" aria-hidden="true" />
-                <span className="font-mono tabular-nums">+1 (800) 555-0194</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#DDF3E9] text-[#159B79]">
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="vc-numeric font-medium text-[#131E1C]">
+                  +1 (800) 555-0194
+                </span>
               </div>
               <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-teal-300 shrink-0" aria-hidden="true" />
-                <span>240 Beacon Clinical Way, Boston, MA</span>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#DDF3E9] text-[#159B79]">
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="font-medium text-[#131E1C]">
+                  240 Beacon Clinical Way, Boston, MA
+                </span>
               </div>
             </GlassSurface>
           </div>
@@ -69,15 +80,16 @@ export const ContactPage: React.FC = () => {
             <GlassSurface className="p-8">
               {submitted ? (
                 <div className="flex flex-col items-start gap-4 py-6">
-                  <p className="text-xs font-medium tracking-[0.14em] text-teal-300">
+                  <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                     Message Received
                   </p>
-                  <h2 className="font-display text-2xl font-semibold text-slate-50">
+                  <h2 className="font-display text-2xl font-bold text-[#123C35]">
                     Thank you for reaching out, {name}.
                   </h2>
-                  <p className="text-sm leading-relaxed text-slate-300/85">
+                  <p className="text-sm leading-relaxed text-[#414846]">
                     Our clinical support desk has logged your inquiry in this
-                    frontend preview and will respond to {email}.
+                    frontend preview and will respond to{' '}
+                    <span className="font-semibold text-[#131E1C]">{email}</span>.
                   </p>
                   <VidaButton
                     type="button"
@@ -97,7 +109,7 @@ export const ContactPage: React.FC = () => {
                 <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="contact-name" className="text-xs font-medium text-slate-300">
+                      <label htmlFor="contact-name" className="text-xs font-semibold text-[#131E1C]">
                         Your Name
                       </label>
                       <input
@@ -106,11 +118,11 @@ export const ContactPage: React.FC = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Full name"
-                        className="min-h-[44px] rounded-lg border border-slate-800 bg-slate-950/70 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none focus:ring-2 focus:ring-teal-400/25"
+                        className="vc-input"
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="contact-email" className="text-xs font-medium text-slate-300">
+                      <label htmlFor="contact-email" className="text-xs font-semibold text-[#131E1C]">
                         Email Address
                       </label>
                       <input
@@ -119,13 +131,13 @@ export const ContactPage: React.FC = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="name@example.com"
-                        className="min-h-[44px] rounded-lg border border-slate-800 bg-slate-950/70 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none focus:ring-2 focus:ring-teal-400/25"
+                        className="vc-input"
                       />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="contact-message" className="text-xs font-medium text-slate-300">
+                    <label htmlFor="contact-message" className="text-xs font-semibold text-[#131E1C]">
                       How can we assist?
                     </label>
                     <textarea
@@ -134,12 +146,15 @@ export const ContactPage: React.FC = () => {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="Share details regarding a patient campaign, hospital partnership, or donation receipt..."
-                      className="rounded-lg border border-slate-800 bg-slate-950/70 p-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none focus:ring-2 focus:ring-teal-400/25"
+                      className="vc-input py-3"
                     />
                   </div>
 
                   {error && (
-                    <p role="alert" className="text-xs text-amber-300">
+                    <p
+                      role="alert"
+                      className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-medium text-red-700"
+                    >
                       {error}
                     </p>
                   )}

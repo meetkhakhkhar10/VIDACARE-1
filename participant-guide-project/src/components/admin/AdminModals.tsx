@@ -57,7 +57,7 @@ export const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onCancel}
     >
       <GlassSurface className="w-full max-w-md p-6 sm:p-7">
@@ -65,10 +65,10 @@ export const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${
                   tone === 'danger'
-                    ? 'border-rose-400/40 bg-rose-950/40 text-rose-300'
-                    : 'border-teal-400/40 bg-teal-950/40 text-teal-300'
+                    ? 'border-red-200 bg-red-50 text-red-700'
+                    : 'border-[#159B79]/30 bg-[#DDF3E9] text-[#123C35]'
                 }`}
               >
                 {tone === 'danger' ? (
@@ -79,7 +79,7 @@ export const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
               </div>
               <h2
                 id="confirm-modal-title"
-                className="font-display text-xl font-semibold text-slate-50"
+                className="font-display text-xl font-bold text-[#123C35]"
               >
                 {title}
               </h2>
@@ -88,13 +88,13 @@ export const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
               type="button"
               onClick={onCancel}
               aria-label="Close confirmation dialog"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
-          <p className="text-sm leading-relaxed text-slate-300/85">{description}</p>
+          <p className="text-sm leading-relaxed text-[#414846]">{description}</p>
 
           <div className="flex justify-end gap-3 pt-1">
             <VidaButton type="button" variant="secondary" onClick={onCancel}>
@@ -103,10 +103,10 @@ export const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
             <button
               type="button"
               onClick={onConfirm}
-              className={`inline-flex min-h-[42px] items-center justify-center rounded-lg px-5 py-2 text-sm font-semibold transition-colors ${
+              className={`inline-flex min-h-[44px] items-center justify-center rounded-xl px-5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                 tone === 'danger'
-                  ? 'bg-rose-500 text-white hover:bg-rose-400'
-                  : 'bg-teal-400 text-slate-950 hover:bg-teal-300'
+                  ? 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600'
+                  : 'bg-[#123C35] text-white hover:bg-[#159B79] focus-visible:ring-[#159B79]'
               }`}
             >
               {confirmLabel}
@@ -123,6 +123,7 @@ interface CampaignInspectorModalProps {
   onClose: () => void;
   onApprove: (campaign: MedicalCampaign) => void;
   onReject: (campaign: MedicalCampaign) => void;
+  onOpenSplitReview?: (campaign: MedicalCampaign) => void;
 }
 
 export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
@@ -130,6 +131,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
   onClose,
   onApprove,
   onReject,
+  onOpenSplitReview,
 }) => {
   useEffect(() => {
     if (!campaign) return;
@@ -148,7 +150,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="inspect-campaign-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="max-h-[90vh] w-full max-w-3xl overflow-y-auto p-6 sm:p-8">
@@ -156,17 +158,17 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
           {/* Header */}
           <div className="flex items-start justify-between gap-4 border-b vc-hairline pb-4">
             <div>
-              <p className="text-xs font-medium tracking-[0.14em] text-sky-300">
+              <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                 Campaign Review · {campaign.id.toUpperCase()}
               </p>
               <h2
                 id="inspect-campaign-title"
-                className="mt-1 font-display text-2xl font-semibold text-slate-50"
+                className="mt-1 font-display text-2xl font-bold text-[#123C35]"
               >
                 {campaign.title}
               </h2>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                <span>{campaign.patientName}</span>
+              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-[#414846]">
+                <span className="font-medium text-[#131E1C]">{campaign.patientName}</span>
                 <span aria-hidden="true">·</span>
                 <span>{campaign.ageLabel}</span>
                 <span aria-hidden="true">·</span>
@@ -175,10 +177,10 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
                 <span
                   className={
                     campaign.status === 'approved'
-                      ? 'text-teal-300 font-medium'
+                      ? 'font-semibold text-[#159B79]'
                       : campaign.status === 'rejected'
-                      ? 'text-rose-300 font-medium'
-                      : 'text-amber-300 font-medium'
+                      ? 'font-semibold text-red-700'
+                      : 'font-semibold text-amber-800'
                   }
                 >
                   Status: {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
@@ -189,7 +191,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close campaign review dialog"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -197,7 +199,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
 
           {/* Patient & Funding Snapshot */}
           <div className="grid gap-6 md:grid-cols-12">
-            <div className="h-48 overflow-hidden rounded-xl border border-white/10 bg-slate-950 md:col-span-5">
+            <div className="h-48 overflow-hidden rounded-2xl border border-[#123C35]/14 bg-[#DDF3E9] md:col-span-5">
               <SafeImage
                 src={campaign.imageUrl}
                 alt={campaign.patientName}
@@ -208,32 +210,34 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
             <div className="flex flex-col justify-between gap-4 md:col-span-7">
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-slate-400">Medical Condition</span>
-                  <p className="mt-0.5 font-medium text-slate-100">{campaign.condition}</p>
+                  <span className="text-[#414846]">Medical Condition</span>
+                  <p className="mt-0.5 font-semibold text-[#131E1C]">{campaign.condition}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400">Hospital / Facility</span>
-                  <p className="mt-0.5 font-medium text-slate-100">{campaign.hospitalName}</p>
+                  <span className="text-[#414846]">Hospital / Facility</span>
+                  <p className="mt-0.5 font-semibold text-[#131E1C]">{campaign.hospitalName}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400">Organizer</span>
-                  <p className="mt-0.5 font-medium text-slate-100">
+                  <span className="text-[#414846]">Organizer</span>
+                  <p className="mt-0.5 font-semibold text-[#131E1C]">
                     {campaign.organizerName} ({campaign.organizerRelation})
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400">Location</span>
-                  <p className="mt-0.5 font-medium text-slate-100">{campaign.location}</p>
+                  <span className="text-[#414846]">Settlement &amp; Location</span>
+                  <p className="mt-0.5 font-semibold text-[#131E1C]">
+                    {campaign.settlementPreference || 'Direct Hospital Billing'} · {campaign.location}
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-col gap-2 border-t vc-hairline pt-3">
                 <ProgressMeter value={pct} />
-                <div className="flex justify-between font-mono text-xs tabular-nums">
-                  <span className="text-teal-300">
+                <div className="vc-numeric flex justify-between text-xs">
+                  <span className="font-semibold text-[#159B79]">
                     {formatINR(campaign.raisedAmount)} raised ({campaign.donorCount} donors)
                   </span>
-                  <span className="text-slate-300">
+                  <span className="font-semibold text-[#123C35]">
                     Goal: {formatINR(campaign.goalAmount)}
                   </span>
                 </div>
@@ -243,16 +247,16 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
 
           {/* Story & Treatment Details */}
           <div className="flex flex-col gap-3 border-t vc-hairline pt-4">
-            <h3 className="text-xs font-semibold tracking-[0.14em] text-amber-300">
+            <h3 className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
               Clinical Summary &amp; Patient Story
             </h3>
-            <p className="text-sm leading-relaxed text-slate-200">{campaign.summary}</p>
-            <p className="text-xs leading-relaxed text-slate-400">
-              <span className="font-medium text-slate-300">Planned Treatment: </span>
+            <p className="text-sm leading-relaxed text-[#131E1C]">{campaign.summary}</p>
+            <p className="text-xs leading-relaxed text-[#414846]">
+              <span className="font-semibold text-[#131E1C]">Planned Treatment: </span>
               {campaign.treatmentDetails}
             </p>
             {campaign.status === 'rejected' && campaign.rejectionReason && (
-              <div className="rounded-lg border border-rose-400/35 bg-rose-950/30 p-3 text-xs text-rose-200">
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
                 <span className="font-semibold">Recorded Rejection Reason: </span>
                 {campaign.rejectionReason}
               </div>
@@ -262,16 +266,16 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
           {/* Medical Documents */}
           <div className="flex flex-col gap-3 border-t vc-hairline pt-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-semibold tracking-[0.14em] text-sky-300">
+              <h3 className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                 Uploaded Medical Documents (Demo Previews)
               </h3>
-              <span className="font-mono text-xs tabular-nums text-slate-400">
+              <span className="font-mono text-xs font-medium tabular-nums text-[#414846]">
                 {campaign.documents?.length ?? 0} attached
               </span>
             </div>
 
             {!campaign.documents || campaign.documents.length === 0 ? (
-              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-400">
+              <div className="rounded-xl border border-[#123C35]/12 bg-[#F8FAF7] p-4 text-xs text-[#414846]">
                 No clinical estimate or hospital verification documents are attached to this submission.
               </div>
             ) : (
@@ -279,16 +283,16 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
                 {campaign.documents.map((doc) => (
                   <div
                     key={doc.id}
-                    className="flex flex-col gap-2 rounded-xl border border-slate-800/90 bg-slate-950/65 p-4"
+                    className="flex flex-col gap-2 rounded-xl border border-[#123C35]/14 bg-[#F8FAF7] p-4"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-sky-300 shrink-0" aria-hidden="true" />
-                        <span className="text-sm font-medium text-slate-100">{doc.title}</span>
+                        <FileText className="h-4 w-4 text-[#159B79] shrink-0" aria-hidden="true" />
+                        <span className="text-sm font-semibold text-[#123C35]">{doc.title}</span>
                       </div>
                       <span
-                        className={`inline-flex items-center gap-1 text-xs font-medium ${
-                          doc.verified ? 'text-teal-300' : 'text-amber-300'
+                        className={`inline-flex items-center gap-1 text-xs font-semibold ${
+                          doc.verified ? 'text-[#159B79]' : 'text-amber-800'
                         }`}
                       >
                         {doc.verified ? (
@@ -299,7 +303,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
                         <span>{doc.verified ? 'Cleared in Preview' : 'Pending Review'}</span>
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#414846]">
                       <span>{doc.docType}</span>
                       <span aria-hidden="true">·</span>
                       <span>{doc.issuedBy}</span>
@@ -310,23 +314,23 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
                       <span aria-hidden="true">·</span>
                       <span>{doc.fileSize}</span>
                     </div>
-                    <p className="text-xs leading-relaxed text-slate-300/85">{doc.summary}</p>
+                    <p className="text-xs leading-relaxed text-[#131E1C]">{doc.summary}</p>
                     {doc.previewUrl ? (
                       doc.mimeType === 'application/pdf' ? (
                         <iframe
                           title={doc.fileName || doc.title}
                           src={doc.previewUrl}
-                          className="mt-2 h-56 w-full rounded-lg border border-slate-800 bg-white"
+                          className="mt-2 h-56 w-full rounded-xl border border-[#123C35]/15 bg-white"
                         />
                       ) : (
                         <img
                           src={doc.previewUrl}
                           alt={doc.fileName || doc.title}
-                          className="mt-2 max-h-56 w-full rounded-lg border border-slate-800 bg-slate-900 object-contain"
+                          className="mt-2 max-h-56 w-full rounded-xl border border-[#123C35]/15 bg-white object-contain"
                         />
                       )
                     ) : doc.isTemporaryPreview ? (
-                      <p className="mt-1 text-[11px] text-amber-300/90">
+                      <p className="mt-1 text-[11px] font-medium text-amber-800">
                         Temporary browser preview expired after page reload (uploaded files are not stored in LocalStorage).
                       </p>
                     ) : null}
@@ -341,11 +345,21 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
             <VidaButton type="button" variant="secondary" onClick={onClose}>
               Close
             </VidaButton>
+            {onOpenSplitReview && (
+              <button
+                type="button"
+                onClick={() => onOpenSplitReview(campaign)}
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-[10px] border border-[#123C35]/20 bg-[#F8FAF7] px-4 py-2 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9]"
+              >
+                <ShieldCheck className="h-4 w-4 text-[#159B79]" aria-hidden="true" />
+                <span>Open Split-Screen Verification</span>
+              </button>
+            )}
             {campaign.status !== 'rejected' && (
               <button
                 type="button"
                 onClick={() => onReject(campaign)}
-                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-lg border border-rose-400/40 bg-rose-950/35 px-4 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/60"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-100"
               >
                 <XCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Reject Campaign</span>
@@ -355,7 +369,7 @@ export const CampaignInspectorModal: React.FC<CampaignInspectorModalProps> = ({
               <button
                 type="button"
                 onClick={() => onApprove(campaign)}
-                className="inline-flex min-h-[42px] items-center gap-1.5 rounded-lg bg-teal-400 px-5 py-2 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-[#123C35] px-5 py-2 text-xs font-semibold text-white hover:bg-[#159B79]"
               >
                 <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                 <span>Approve Campaign</span>
@@ -421,19 +435,19 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="reject-campaign-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="w-full max-w-lg p-6 sm:p-7">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-3 border-b vc-hairline pb-4">
             <div>
-              <p className="text-xs font-medium tracking-[0.14em] text-rose-300">
+              <p className="text-xs font-semibold tracking-[0.14em] text-red-700 uppercase">
                 Decline Fundraiser
               </p>
               <h2
                 id="reject-campaign-title"
-                className="mt-1 font-display text-xl font-semibold text-slate-50"
+                className="mt-1 font-display text-xl font-bold text-[#123C35]"
               >
                 Reject “{campaign.title}”
               </h2>
@@ -442,7 +456,7 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close reject dialog"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -450,7 +464,7 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-semibold text-[#414846]">
                 Common Review Notes:
               </span>
               <div className="flex flex-wrap gap-2">
@@ -462,7 +476,7 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
                       setReason(tpl);
                       setError('');
                     }}
-                    className="rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-1.5 text-left text-[11px] text-slate-300 hover:border-amber-300/40 hover:text-white"
+                    className="rounded-xl border border-[#123C35]/18 bg-[#F0FCF8] px-3 py-1.5 text-left text-[11px] font-medium text-[#131E1C] hover:border-[#159B79] hover:bg-[#DDF3E9]"
                   >
                     {tpl}
                   </button>
@@ -471,7 +485,7 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="reject-reason" className="text-xs font-medium text-slate-300">
+              <label htmlFor="reject-reason" className="text-xs font-semibold text-[#131E1C]">
                 Rejection Reason (visible to campaign creator) *
               </label>
               <textarea
@@ -483,12 +497,12 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
                   if (error) setError('');
                 }}
                 placeholder="Explain what documentation or clinical verification is missing..."
-                className="rounded-lg border border-slate-800 bg-slate-950/75 p-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-rose-400/60 focus:outline-none"
+                className="vc-input min-h-[96px] py-3"
               />
             </div>
 
             {error && (
-              <p role="alert" className="text-xs text-rose-300">
+              <p role="alert" className="text-xs font-medium text-red-700">
                 {error}
               </p>
             )}
@@ -499,7 +513,7 @@ export const RejectCampaignModal: React.FC<RejectCampaignModalProps> = ({
               </VidaButton>
               <button
                 type="submit"
-                className="inline-flex min-h-[42px] items-center justify-center rounded-lg bg-rose-500 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-400"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-red-600 px-5 py-2 text-sm font-semibold text-white hover:bg-red-700"
               >
                 Confirm Rejection
               </button>
@@ -554,14 +568,14 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="inspect-user-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="max-h-[90vh] w-full max-w-xl overflow-y-auto p-6 sm:p-8">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4 border-b vc-hairline pb-4">
             <div className="flex items-center gap-3.5">
-              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border border-amber-300/35 bg-slate-900">
+              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full border border-[#159B79]/30 bg-[#DDF3E9]">
                 {account.avatarUrl ? (
                   <SafeImage
                     src={account.avatarUrl}
@@ -569,7 +583,7 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-slate-400">
+                  <div className="flex h-full w-full items-center justify-center text-[#123C35]">
                     <UserIcon className="h-6 w-6" aria-hidden="true" />
                   </div>
                 )}
@@ -577,11 +591,11 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
               <div>
                 <h2
                   id="inspect-user-title"
-                  className="font-display text-xl font-semibold text-slate-50"
+                  className="font-display text-xl font-bold text-[#123C35]"
                 >
                   {account.fullName}
                 </h2>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#414846]">
                   {account.role} · Joined {account.createdAt}
                 </p>
               </div>
@@ -590,7 +604,7 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close user profile dialog"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -598,22 +612,22 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
 
           <div className="grid gap-3 text-xs sm:grid-cols-2">
             <div>
-              <span className="text-slate-400">Email</span>
-              <p className="mt-0.5 text-slate-100">{account.email}</p>
+              <span className="text-[#414846]">Email</span>
+              <p className="mt-0.5 font-medium text-[#131E1C]">{account.email}</p>
             </div>
             <div>
-              <span className="text-slate-400">Phone</span>
-              <p className="mt-0.5 font-mono text-slate-100">{account.phone}</p>
+              <span className="text-[#414846]">Phone</span>
+              <p className="mt-0.5 font-mono font-medium text-[#131E1C]">{account.phone}</p>
             </div>
             <div>
-              <span className="text-slate-400">Location</span>
-              <p className="mt-0.5 text-slate-100">{account.location || 'Not provided'}</p>
+              <span className="text-[#414846]">Location</span>
+              <p className="mt-0.5 font-medium text-[#131E1C]">{account.location || 'Not provided'}</p>
             </div>
             <div>
-              <span className="text-slate-400">Account Status</span>
+              <span className="text-[#414846]">Account Status</span>
               <p
-                className={`mt-0.5 font-medium ${
-                  account.blocked ? 'text-rose-300' : 'text-teal-300'
+                className={`mt-0.5 font-semibold ${
+                  account.blocked ? 'text-red-700' : 'text-[#159B79]'
                 }`}
               >
                 {account.blocked ? 'Blocked' : 'Active'}
@@ -623,14 +637,14 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
 
           <div className="grid grid-cols-2 gap-4 border-y vc-hairline py-4">
             <div>
-              <span className="text-xs text-slate-400">Campaigns Created</span>
-              <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-amber-300">
+              <span className="text-xs font-medium text-[#414846]">Campaigns Created</span>
+              <p className="vc-numeric mt-1 text-xl font-bold text-[#123C35]">
                 {userCampaigns.length}
               </p>
             </div>
             <div>
-              <span className="text-xs text-slate-400">Total Donated</span>
-              <p className="mt-1 font-mono text-xl font-semibold tabular-nums text-sky-300">
+              <span className="text-xs font-medium text-[#414846]">Total Donated</span>
+              <p className="vc-numeric mt-1 text-xl font-bold text-[#159B79]">
                 {formatINR(totalDonated)}
               </p>
             </div>
@@ -638,12 +652,12 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
 
           {userCampaigns.length > 0 && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-xs font-semibold text-slate-300">Created Campaigns</h3>
-              <ul className="flex flex-col gap-1.5 text-xs text-slate-400">
+              <h3 className="text-xs font-semibold text-[#123C35]">Created Campaigns</h3>
+              <ul className="flex flex-col gap-1.5 text-xs text-[#414846]">
                 {userCampaigns.map((c) => (
                   <li key={c.id} className="flex justify-between gap-2">
-                    <span className="truncate text-slate-200">{c.title}</span>
-                    <span className="shrink-0 capitalize text-amber-300">{c.status}</span>
+                    <span className="truncate font-medium text-[#131E1C]">{c.title}</span>
+                    <span className="shrink-0 font-semibold capitalize text-[#159B79]">{c.status}</span>
                   </li>
                 ))}
               </ul>
@@ -661,10 +675,10 @@ export const UserInspectorModal: React.FC<UserInspectorModalProps> = ({
                   onToggleBlock(account);
                   onClose();
                 }}
-                className={`inline-flex min-h-[42px] items-center rounded-lg px-4 py-2 text-xs font-semibold ${
+                className={`inline-flex min-h-[44px] items-center rounded-xl px-4 py-2 text-xs font-semibold ${
                   account.blocked
-                    ? 'bg-teal-400 text-slate-950 hover:bg-teal-300'
-                    : 'border border-rose-400/40 bg-rose-950/35 text-rose-200 hover:bg-rose-950/60'
+                    ? 'bg-[#123C35] text-white hover:bg-[#159B79]'
+                    : 'border border-red-200 bg-red-50 text-red-700 hover:bg-red-100'
                 }`}
               >
                 {account.blocked ? 'Unblock Account' : 'Block Account'}
@@ -735,19 +749,19 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="category-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="w-full max-w-md p-6 sm:p-7">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-3 border-b vc-hairline pb-4">
             <div>
-              <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+              <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                 Taxonomy Control
               </p>
               <h2
                 id="category-modal-title"
-                className="mt-1 font-display text-xl font-semibold text-slate-50"
+                className="mt-1 font-display text-xl font-bold text-[#123C35]"
               >
                 {editingCategory ? 'Edit Medical Category' : 'Add Medical Category'}
               </h2>
@@ -756,7 +770,7 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close category dialog"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -764,7 +778,7 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="cat-name" className="text-xs font-medium text-slate-300">
+              <label htmlFor="cat-name" className="text-xs font-semibold text-[#131E1C]">
                 Category Name *
               </label>
               <input
@@ -773,12 +787,12 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g., Pediatric Neurology"
-                className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                className="vc-input"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="cat-display-title" className="text-xs font-medium text-slate-300">
+              <label htmlFor="cat-display-title" className="text-xs font-semibold text-[#131E1C]">
                 Display Title (Optional)
               </label>
               <input
@@ -787,12 +801,12 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                 value={displayTitle}
                 onChange={(e) => setDisplayTitle(e.target.value)}
                 placeholder="Shown on category showcase cards (defaults to Name)"
-                className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                className="vc-input"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="cat-desc" className="text-xs font-medium text-slate-300">
+              <label htmlFor="cat-desc" className="text-xs font-semibold text-[#131E1C]">
                 Clinical Scope Description
               </label>
               <textarea
@@ -801,12 +815,12 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Summarize treatments covered under this category..."
-                className="rounded-lg border border-slate-800 bg-slate-950/75 p-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                className="vc-input min-h-[96px] py-3"
               />
             </div>
 
             {error && (
-              <p role="alert" className="text-xs text-rose-300">
+              <p role="alert" className="text-xs font-medium text-red-700">
                 {error}
               </p>
             )}
@@ -853,24 +867,24 @@ export const MessageInspectorModal: React.FC<MessageInspectorModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="inspect-msg-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="w-full max-w-lg p-6 sm:p-7">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-3 border-b vc-hairline pb-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-sky-400/35 bg-sky-400/10 text-sky-300">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#159B79]/30 bg-[#DDF3E9] text-[#123C35]">
                 <Mail className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <h2
                   id="inspect-msg-title"
-                  className="font-display text-xl font-semibold text-slate-50"
+                  className="font-display text-xl font-bold text-[#123C35]"
                 >
                   {message.subject}
                 </h2>
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-[#414846]">
                   From {message.name} ({message.email})
                 </p>
               </div>
@@ -879,30 +893,30 @@ export const MessageInspectorModal: React.FC<MessageInspectorModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close message dialog"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center justify-between text-xs text-[#414846]">
             <span className="font-mono tabular-nums">
               {new Date(message.createdAt).toLocaleString()}
             </span>
             <span
-              className={`font-medium capitalize ${
+              className={`font-semibold capitalize ${
                 message.status === 'resolved'
-                  ? 'text-teal-300'
+                  ? 'text-[#159B79]'
                   : message.status === 'read'
-                  ? 'text-sky-300'
-                  : 'text-amber-300'
+                  ? 'text-[#123C35]'
+                  : 'text-amber-800'
               }`}
             >
               Status: {message.status}
             </span>
           </div>
 
-          <p className="rounded-xl border border-slate-800 bg-slate-950/65 p-4 text-sm leading-relaxed text-slate-200">
+          <p className="rounded-2xl border border-[#123C35]/14 bg-[#F0FCF8] p-4 text-sm leading-relaxed text-[#131E1C]">
             {message.message}
           </p>
 
@@ -917,7 +931,7 @@ export const MessageInspectorModal: React.FC<MessageInspectorModalProps> = ({
                   onStatusChange(message.id, 'read');
                   onClose();
                 }}
-                className="inline-flex min-h-[40px] items-center rounded-lg border border-sky-400/40 bg-sky-400/10 px-4 py-2 text-xs font-medium text-sky-200 hover:bg-sky-400/20"
+                className="inline-flex min-h-[44px] items-center rounded-xl border border-[#123C35]/20 bg-[#DDF3E9] px-4 py-2 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9]/70"
               >
                 Mark as Read
               </button>
@@ -929,7 +943,7 @@ export const MessageInspectorModal: React.FC<MessageInspectorModalProps> = ({
                   onStatusChange(message.id, 'resolved');
                   onClose();
                 }}
-                className="inline-flex min-h-[40px] items-center rounded-lg bg-teal-400 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                className="inline-flex min-h-[44px] items-center rounded-xl bg-[#123C35] px-4 py-2 text-xs font-semibold text-white hover:bg-[#159B79]"
               >
                 Mark as Resolved
               </button>

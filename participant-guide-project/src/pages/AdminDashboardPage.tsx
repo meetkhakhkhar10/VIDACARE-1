@@ -53,6 +53,7 @@ import {
   UserInspectorModal,
 } from '../components/admin/AdminModals';
 import { AdminAnalyticsSection } from '../components/admin/AdminAnalyticsSection';
+import { AdminVerificationWorkspace } from '../components/admin/AdminVerificationWorkspace';
 import { adminService } from '../services/adminService';
 import { VerificationRequest, VerificationStatus } from '../types/api';
 
@@ -72,22 +73,22 @@ const PAGE_SIZE = 5;
 function CampaignStatusText({ status }: { status: MedicalCampaign['status'] }) {
   if (status === 'approved') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-300">
-        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+      <span className="inline-flex items-center gap-1.5 rounded-[8px] border border-[#159B79]/25 bg-[#DDF3E9] px-2.5 py-0.5 text-xs font-semibold text-[#123C35]">
+        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-[#159B79]" aria-hidden="true" />
         <span>Approved</span>
       </span>
     );
   }
   if (status === 'rejected') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-300">
+      <span className="inline-flex items-center gap-1.5 rounded-[8px] border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700">
         <XCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         <span>Rejected</span>
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-300">
+    <span className="inline-flex items-center gap-1.5 rounded-[8px] border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
       <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       <span>Pending</span>
     </span>
@@ -107,8 +108,8 @@ function PaginationBar({
 }) {
   if (totalItems <= PAGE_SIZE) return null;
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t vc-hairline px-5 py-3.5 text-xs text-slate-400">
-      <span className="font-mono tabular-nums">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#123C35]/10 px-5 py-3.5 text-xs text-[#414846]">
+      <span className="vc-numeric">
         Page {page} of {totalPages} · {totalItems} records
       </span>
       <div className="flex items-center gap-1.5">
@@ -116,7 +117,7 @@ function PaginationBar({
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/70 text-slate-300 transition-colors hover:border-amber-300/40 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#123C35] transition-colors hover:bg-[#DDF3E9] disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -126,10 +127,10 @@ function PaginationBar({
             key={p}
             type="button"
             onClick={() => onPageChange(p)}
-            className={`h-8 min-w-[32px] rounded-lg px-2 font-mono text-xs tabular-nums transition-colors ${
+            className={`h-8 min-w-[32px] rounded-xl px-2 font-mono text-xs tabular-nums transition-colors ${
               p === page
-                ? 'bg-amber-300 font-semibold text-slate-950'
-                : 'border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-sky-300/40'
+                ? 'bg-[#123C35] font-semibold text-white'
+                : 'border border-[#123C35]/15 bg-[#F0FCF8] text-[#131E1C] hover:bg-[#DDF3E9]'
             }`}
           >
             {p}
@@ -139,7 +140,7 @@ function PaginationBar({
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/70 text-slate-300 transition-colors hover:border-amber-300/40 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#123C35] transition-colors hover:bg-[#DDF3E9] disabled:opacity-40 disabled:pointer-events-none"
           aria-label="Next page"
         >
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -158,11 +159,13 @@ export const AdminDashboardPage: React.FC = () => {
     donations,
     categories,
     contactMessages,
+    auditLogs,
     authenticateMock,
     signOutMock,
     updateUserProfile,
     approveCampaign,
     rejectCampaign,
+    requestCampaignResubmission,
     removeCampaign,
     toggleBlockAccount,
     addCategory,
@@ -190,6 +193,7 @@ export const AdminDashboardPage: React.FC = () => {
   const [campPage, setCampPage] = useState(1);
   const [inspectCampaign, setInspectCampaign] = useState<MedicalCampaign | null>(null);
   const [rejectTarget, setRejectTarget] = useState<MedicalCampaign | null>(null);
+  const [selectedVerCampaignId, setSelectedVerCampaignId] = useState<string>('');
 
   // User Management filters & modals
   const [userSearch, setUserSearch] = useState('');
@@ -429,21 +433,21 @@ export const AdminDashboardPage: React.FC = () => {
   // Protected Admin Route Gate (Mock Frontend Role-Based Access)
   if (!user || user.role !== 'Admin') {
     return (
-      <section className="py-16 sm:py-20">
+      <section className="min-h-[calc(100vh-72px)] bg-[#F8FAF7] py-16 sm:py-20">
         <div className="mx-auto max-w-[780px] px-4 sm:px-6 lg:px-8">
           <GlassSurface className="flex flex-col gap-6 p-8 sm:p-12">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-300/35 bg-amber-300/10 text-amber-300">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#159B79]/30 bg-[#DDF3E9] text-[#123C35]">
                 <Lock className="h-6 w-6" aria-hidden="true" />
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                   Protected Admin Route (Demo Role Check)
                 </p>
-                <h1 className="font-display text-3xl font-semibold text-slate-50 sm:text-4xl">
+                <h1 className="font-display text-3xl font-bold text-[#123C35] sm:text-4xl">
                   Administrator Access Required
                 </h1>
-                <p className="text-sm leading-relaxed text-slate-300/85">
+                <p className="text-sm leading-relaxed text-[#414846]">
                   {user
                     ? `You are currently signed in as ${user.fullName} (${user.role}). Only accounts with the Admin role can enter the administrative moderation workspace.`
                     : 'Sign in with an Admin role account to review medical campaigns, manage demo user accounts, and view platform analytics.'}
@@ -451,8 +455,8 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 text-xs text-slate-400">
-              <strong className="text-slate-200">Frontend Demo Notice:</strong>{' '}
+            <div className="rounded-xl border border-[#123C35]/12 bg-[#F0FCF8] p-4 text-xs text-[#414846]">
+              <strong className="text-[#123C35]">Frontend Demo Notice:</strong>{' '}
               Role checks, document previews, and account controls run strictly in
               browser LocalStorage for demonstration purposes and do not perform
               server-side authentication or clinical verification.
@@ -464,7 +468,7 @@ export const AdminDashboardPage: React.FC = () => {
                 onClick={() =>
                   authenticateMock('admin@vidacare.org', 'VidaAdmin@2026', true)
                 }
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-teal-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-teal-300"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#123C35] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#159B79]"
               >
                 <ShieldCheck className="h-4 w-4" aria-hidden="true" />
                 <span>Enter Demo Admin Console (Dr. Claire Sterling)</span>
@@ -707,15 +711,15 @@ export const AdminDashboardPage: React.FC = () => {
     navItems.find((item) => item.id === section)?.label || 'Overview';
 
   return (
-    <section className="py-8 sm:py-10">
+    <section className="min-h-[calc(100vh-72px)] bg-[#F8FAF7] py-8 sm:py-10">
       <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
         <div className="grid items-start gap-8 lg:grid-cols-12">
           {/* Desktop Admin Sidebar */}
           <aside className="hidden lg:col-span-3 lg:block lg:sticky lg:top-24">
             <GlassSurface className="flex flex-col gap-5 p-5">
               {/* Admin Profile Identity */}
-              <div className="flex items-center gap-3.5 border-b vc-hairline pb-4">
-                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-teal-400/40 bg-slate-900">
+              <div className="flex items-center gap-3.5 border-b border-[#123C35]/10 pb-4">
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border-2 border-[#159B79]/35 bg-[#DDF3E9]">
                   <SafeImage
                     src={
                       user.avatarUrl ||
@@ -726,10 +730,10 @@ export const AdminDashboardPage: React.FC = () => {
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-slate-50">
+                  <p className="truncate text-sm font-semibold text-[#131E1C]">
                     {user.fullName}
                   </p>
-                  <p className="truncate text-xs text-teal-300">
+                  <p className="truncate text-xs font-medium text-[#159B79]">
                     VidaCare Admin Console
                   </p>
                 </div>
@@ -748,23 +752,23 @@ export const AdminDashboardPage: React.FC = () => {
                         setSection(item.id);
                         setBannerNotice(null);
                       }}
-                      className={`flex min-h-[42px] w-full items-center justify-between gap-2.5 rounded-lg px-3.5 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 ${
+                      className={`flex min-h-[42px] w-full items-center justify-between gap-2.5 rounded-xl px-3.5 py-2 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
                         active
-                          ? 'border border-amber-300/35 bg-amber-300/15 text-amber-200'
-                          : 'border border-transparent text-slate-300 hover:bg-white/5 hover:text-white'
+                          ? 'border border-[#159B79]/30 bg-[#DDF3E9] text-[#123C35] font-semibold'
+                          : 'border border-transparent text-[#414846] hover:bg-[#F0FCF8] hover:text-[#123C35]'
                       }`}
                     >
                       <span className="flex items-center gap-2.5 truncate">
                         <Icon
                           className={`h-4 w-4 shrink-0 ${
-                            active ? 'text-amber-300' : 'text-slate-400'
+                            active ? 'text-[#159B79]' : 'text-[#414846]'
                           }`}
                           aria-hidden="true"
                         />
                         <span className="truncate">{item.label}</span>
                       </span>
                       {item.badge !== undefined && (
-                        <span className="font-mono text-xs font-semibold tabular-nums text-amber-300">
+                        <span className="rounded-lg bg-[#123C35] px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-white">
                           {item.badge}
                         </span>
                       )}
@@ -773,17 +777,17 @@ export const AdminDashboardPage: React.FC = () => {
                 })}
               </nav>
 
-              <div className="flex flex-col gap-2 border-t vc-hairline pt-4">
+              <div className="flex flex-col gap-2 border-t border-[#123C35]/10 pt-4">
                 <Link
                   to="/campaigns"
-                  className="inline-flex min-h-[38px] items-center justify-center rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-200 hover:border-sky-300/40 hover:text-white"
+                  className="inline-flex min-h-[40px] items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] px-3 py-1.5 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                 >
                   View Public Directory
                 </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="inline-flex min-h-[38px] items-center justify-center gap-2 rounded-lg border border-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-400 hover:border-rose-400/40 hover:text-rose-200"
+                  className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                 >
                   <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Logout</span>
@@ -793,22 +797,22 @@ export const AdminDashboardPage: React.FC = () => {
           </aside>
 
           {/* Main Admin Workspace */}
-          <div className="flex flex-col gap-6 lg:col-span-9">
+          <div className="flex flex-col gap-6 lg:col-span-9 min-w-0">
             {/* Mobile & Tablet Compact Header */}
             <div className="flex flex-col gap-3 lg:hidden">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs font-medium text-teal-300">
+                  <p className="text-xs font-semibold text-[#159B79]">
                     VidaCare Admin Console
                   </p>
-                  <p className="truncate text-sm font-semibold text-slate-50">
+                  <p className="truncate text-sm font-semibold text-[#131E1C]">
                     {user.fullName}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-1.5 text-xs font-medium text-slate-300"
+                  className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100"
                 >
                   <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Logout</span>
@@ -826,10 +830,10 @@ export const AdminDashboardPage: React.FC = () => {
                         setSection(item.id);
                         setBannerNotice(null);
                       }}
-                      className={`min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
+                      className={`min-h-[38px] rounded-xl px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
                         active
-                          ? 'bg-amber-300 font-semibold text-slate-950'
-                          : 'border border-slate-800 bg-slate-900/70 text-slate-300'
+                          ? 'bg-[#123C35] text-white'
+                          : 'border border-[#123C35]/15 bg-white text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]'
                       }`}
                     >
                       {item.label}
@@ -841,15 +845,15 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
 
             {/* Contextual Breadcrumb Top Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b vc-hairline pb-4">
-              <div className="flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#123C35]/10 pb-4">
+              <div className="flex items-center gap-2 text-xs text-[#414846]">
                 <span>VidaCare</span>
                 <span aria-hidden="true">/</span>
                 <span>Admin Portal</span>
                 <span aria-hidden="true">/</span>
-                <span className="font-medium text-amber-300">{activeNavLabel}</span>
+                <span className="font-semibold text-[#123C35]">{activeNavLabel}</span>
               </div>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-[#414846]">
                 Frontend demo administration (LocalStorage)
               </span>
             </div>
@@ -858,16 +862,16 @@ export const AdminDashboardPage: React.FC = () => {
             {storageError && (
               <div
                 role="alert"
-                className="flex items-center justify-between gap-3 rounded-xl border border-amber-300/35 bg-amber-950/35 px-4 py-3 text-xs text-amber-100"
+                className="flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900"
               >
                 <span className="flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-300" aria-hidden="true" />
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
                   <span>{storageError}</span>
                 </span>
                 <button
                   type="button"
                   onClick={clearStorageError}
-                  className="text-amber-200 hover:text-white"
+                  className="font-semibold text-amber-900 underline-offset-2 hover:underline"
                 >
                   Dismiss
                 </button>
@@ -878,17 +882,17 @@ export const AdminDashboardPage: React.FC = () => {
             {bannerNotice && (
               <div
                 role="status"
-                className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs ${
+                className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs font-medium ${
                   bannerNotice.type === 'ok'
-                    ? 'border-teal-400/35 bg-teal-950/35 text-teal-200'
-                    : 'border-rose-400/35 bg-rose-950/35 text-rose-200'
+                    ? 'border-[#159B79]/35 bg-[#DDF3E9] text-[#123C35]'
+                    : 'border-red-200 bg-red-50 text-red-800'
                 }`}
               >
                 <span>{bannerNotice.text}</span>
                 <button
                   type="button"
                   onClick={() => setBannerNotice(null)}
-                  className="text-slate-300 hover:text-white"
+                  className="font-semibold underline-offset-2 hover:underline"
                 >
                   Dismiss
                 </button>
@@ -899,10 +903,10 @@ export const AdminDashboardPage: React.FC = () => {
             {section === 'overview' && (
               <div className="flex flex-col gap-6">
                 <div>
-                  <p className="text-xs font-medium tracking-[0.14em] text-teal-300">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                     Platform Operations Summary
                   </p>
-                  <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50 sm:text-3xl">
+                  <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35] sm:text-3xl">
                     Administrative Overview
                   </h1>
                 </div>
@@ -910,63 +914,63 @@ export const AdminDashboardPage: React.FC = () => {
                 {/* 6 Core Admin KPIs */}
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Total Users</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-sky-300">
+                    <span className="text-xs font-medium text-[#414846]">Total Users</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-[#123C35]">
                       {accounts.length}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#414846]">
                       {accounts.filter((a) => a.blocked).length} blocked ·{' '}
                       {accounts.filter((a) => !a.blocked).length} active
                     </span>
                   </GlassSurface>
 
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Total Campaigns</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-slate-50">
+                    <span className="text-xs font-medium text-[#414846]">Total Campaigns</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-[#123C35]">
                       {campaigns.length}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#414846]">
                       {rejectedCampaigns.length} rejected · {categories.length}{' '}
                       categories
                     </span>
                   </GlassSurface>
 
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Approved Campaigns</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-teal-300">
+                    <span className="text-xs font-medium text-[#414846]">Approved Campaigns</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-[#159B79]">
                       {approvedCampaigns.length}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#414846]">
                       Live in public directory
                     </span>
                   </GlassSurface>
 
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Pending Approvals</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-amber-300">
+                    <span className="text-xs font-medium text-[#414846]">Pending Approvals</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-amber-700">
                       {pendingCampaigns.length}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#414846]">
                       Awaiting administrative review
                     </span>
                   </GlassSurface>
 
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Total Donations</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-sky-300">
+                    <span className="text-xs font-medium text-[#414846]">Total Donations</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-[#123C35]">
                       {donations.length}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="vc-numeric text-xs text-[#414846]">
                       {formatINR(totalDonationTxVolume)} logged in ledger
                     </span>
                   </GlassSurface>
 
                   <GlassSurface className="flex flex-col gap-1.5 p-5">
-                    <span className="text-xs text-slate-400">Total Funds Raised</span>
-                    <span className="font-mono text-3xl font-semibold tabular-nums text-teal-300">
+                    <span className="text-xs font-medium text-[#414846]">Total Funds Raised</span>
+                    <span className="vc-numeric font-display text-3xl font-bold text-[#159B79]">
                       {formatINR(totalFundsRaisedAll)}
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#414846]">
                       Cumulative across approved fundraisers
                     </span>
                   </GlassSurface>
@@ -976,39 +980,36 @@ export const AdminDashboardPage: React.FC = () => {
                 <div className="grid gap-6 lg:grid-cols-12">
                   <GlassSurface className="flex flex-col gap-4 p-6 lg:col-span-7">
                     <div className="flex items-center justify-between">
-                      <h2 className="font-display text-xl font-semibold text-slate-50">
+                      <h2 className="font-display text-xl font-bold text-[#123C35]">
                         Pending Approval Queue
                       </h2>
                       <button
                         type="button"
-                        onClick={() => {
-                          setCampStatus('pending');
-                          setSection('campaigns');
-                        }}
-                        className="text-xs font-medium text-amber-300 hover:text-amber-200"
+                        onClick={() => setSection('verifications')}
+                        className="text-xs font-semibold text-[#159B79] hover:text-[#123C35]"
                       >
-                        Review all
+                        Open Split Desk
                       </button>
                     </div>
 
                     {pendingCampaigns.length === 0 ? (
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-[#414846]">
                         All submitted fundraisers have been reviewed.
                       </p>
                     ) : (
-                      <div className="flex flex-col divide-y divide-slate-800/70">
+                      <div className="flex flex-col divide-y divide-[#123C35]/10">
                         {pendingCampaigns.slice(0, 4).map((c) => (
                           <div
                             key={c.id}
                             className="flex flex-col justify-between gap-3 py-3.5 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
                           >
                             <div className="min-w-0">
-                              <p className="truncate text-sm font-medium text-slate-100">
+                              <p className="truncate text-sm font-semibold text-[#131E1C]">
                                 {c.title}
                               </p>
-                              <p className="text-xs text-slate-400">
+                              <p className="text-xs text-[#414846]">
                                 {c.patientName} · {c.hospitalName} · Goal{' '}
-                                <span className="font-mono tabular-nums">
+                                <span className="vc-numeric font-medium text-[#123C35]">
                                   {formatINR(c.goalAmount)}
                                 </span>
                               </p>
@@ -1016,15 +1017,18 @@ export const AdminDashboardPage: React.FC = () => {
                             <div className="flex items-center gap-2 shrink-0">
                               <button
                                 type="button"
-                                onClick={() => setInspectCampaign(c)}
-                                className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-sky-300 hover:border-sky-300/40"
+                                onClick={() => {
+                                  setSelectedVerCampaignId(c.id);
+                                  setSection('verifications');
+                                }}
+                                className="rounded-[10px] border border-[#123C35]/20 bg-[#F8FAF7] px-3 py-1.5 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                               >
-                                Inspect
+                                Verify Docs
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleRequestApprove(c)}
-                                className="rounded-lg bg-teal-400 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                                className="rounded-[10px] bg-[#123C35] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                               >
                                 Approve
                               </button>
@@ -1037,46 +1041,46 @@ export const AdminDashboardPage: React.FC = () => {
 
                   <GlassSurface className="flex flex-col gap-4 p-6 lg:col-span-5">
                     <div className="flex items-center justify-between">
-                      <h2 className="font-display text-xl font-semibold text-slate-50">
+                      <h2 className="font-display text-xl font-bold text-[#123C35]">
                         Inbox Highlights
                       </h2>
                       <button
                         type="button"
                         onClick={() => setSection('messages')}
-                        className="text-xs font-medium text-sky-300 hover:text-sky-200"
+                        className="text-xs font-semibold text-[#159B79] hover:text-[#123C35]"
                       >
                         Open inbox
                       </button>
                     </div>
 
                     {contactMessages.length === 0 ? (
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-[#414846]">
                         No contact inquiries logged yet.
                       </p>
                     ) : (
-                      <div className="flex flex-col divide-y divide-slate-800/70">
+                      <div className="flex flex-col divide-y divide-[#123C35]/10">
                         {contactMessages.slice(0, 3).map((msg) => (
                           <div
                             key={msg.id}
                             className="py-3 first:pt-0 last:pb-0"
                           >
                             <div className="flex items-center justify-between gap-2 text-xs">
-                              <span className="font-medium text-slate-100">
+                              <span className="font-semibold text-[#131E1C]">
                                 {msg.name}
                               </span>
                               <span
-                                className={`capitalize ${
+                                className={`capitalize font-semibold ${
                                   msg.status === 'unread'
-                                    ? 'font-semibold text-amber-300'
+                                    ? 'text-amber-700'
                                     : msg.status === 'resolved'
-                                    ? 'text-teal-300'
-                                    : 'text-sky-300'
+                                    ? 'text-[#159B79]'
+                                    : 'text-[#123C35]'
                                 }`}
                               >
                                 {msg.status}
                               </span>
                             </div>
-                            <p className="mt-0.5 truncate text-xs text-slate-400">
+                            <p className="mt-0.5 truncate text-xs text-[#414846]">
                               {msg.subject} — {msg.message}
                             </p>
                           </div>
@@ -1093,14 +1097,14 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                       Moderation &amp; Verification
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                       Campaign Management
                     </h1>
                   </div>
-                  <span className="font-mono text-xs tabular-nums text-slate-400">
+                  <span className="font-mono text-xs tabular-nums text-[#414846]">
                     {filteredCampaigns.length} matching campaigns
                   </span>
                 </div>
@@ -1110,7 +1114,7 @@ export const AdminDashboardPage: React.FC = () => {
                   <div className="grid gap-3 md:grid-cols-12">
                     <div className="relative md:col-span-8">
                       <Search
-                        className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#414846]"
                         aria-hidden="true"
                       />
                       <input
@@ -1121,7 +1125,7 @@ export const AdminDashboardPage: React.FC = () => {
                           setCampPage(1);
                         }}
                         placeholder="Search by campaign title, patient, hospital, or organizer..."
-                        className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-3.5 pl-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                        className="vc-input pl-10"
                       />
                     </div>
                     <div className="md:col-span-4">
@@ -1132,7 +1136,7 @@ export const AdminDashboardPage: React.FC = () => {
                           setCampCat(e.target.value);
                           setCampPage(1);
                         }}
-                        className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                        className="vc-input"
                       >
                         <option value="All">All Categories</option>
                         {categories.map((cat) => (
@@ -1144,7 +1148,7 @@ export const AdminDashboardPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 border-t vc-hairline pt-3">
+                  <div className="flex flex-wrap gap-2 border-t border-[#123C35]/10 pt-3">
                     {(
                       [
                         { id: 'all', label: `All (${campaigns.length})` },
@@ -1160,10 +1164,10 @@ export const AdminDashboardPage: React.FC = () => {
                           setCampStatus(tab.id);
                           setCampPage(1);
                         }}
-                        className={`min-h-[36px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
+                        className={`min-h-[36px] rounded-xl px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
                           campStatus === tab.id
-                            ? 'bg-amber-300 font-semibold text-slate-950'
-                            : 'border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-sky-300/40'
+                            ? 'bg-[#123C35] text-white'
+                            : 'border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]'
                         }`}
                       >
                         {tab.label}
@@ -1174,10 +1178,10 @@ export const AdminDashboardPage: React.FC = () => {
 
                 {pagedCampaigns.length === 0 ? (
                   <GlassSurface className="flex flex-col items-start gap-3 p-10">
-                    <h2 className="font-display text-xl font-semibold text-slate-50">
+                    <h2 className="font-display text-xl font-bold text-[#123C35]">
                       No campaigns match your filters
                     </h2>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[#414846]">
                       Clear your search query or status filter to view all medical
                       campaigns.
                     </p>
@@ -1189,14 +1193,14 @@ export const AdminDashboardPage: React.FC = () => {
                         setCampCat('All');
                         setCampPage(1);
                       }}
-                      className="rounded-lg bg-teal-400 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                      className="rounded-xl bg-[#123C35] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                     >
                       Reset Filters
                     </button>
                   </GlassSurface>
                 ) : (
                   <GlassSurface className="overflow-hidden">
-                    <div className="divide-y divide-slate-800/75">
+                    <div className="divide-y divide-[#123C35]/10">
                       {pagedCampaigns.map((c) => {
                         const pct = calculateProgress(c.raisedAmount, c.goalAmount);
                         return (
@@ -1205,7 +1209,7 @@ export const AdminDashboardPage: React.FC = () => {
                             className="flex flex-col justify-between gap-4 p-5 md:flex-row md:items-center"
                           >
                             <div className="flex items-start gap-4 min-w-0 flex-1">
-                              <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-slate-950">
+                              <div className="h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-[#123C35]/10 bg-[#DDF3E9]">
                                 <SafeImage
                                   src={c.imageUrl}
                                   alt={c.patientName}
@@ -1215,21 +1219,21 @@ export const AdminDashboardPage: React.FC = () => {
                               <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
                                   <CampaignStatusText status={c.status} />
-                                  <span aria-hidden="true" className="text-slate-600">
+                                  <span aria-hidden="true" className="text-[#414846]/50">
                                     ·
                                   </span>
-                                  <span className="text-sky-300">{c.category}</span>
-                                  <span aria-hidden="true" className="text-slate-600">
+                                  <span className="font-semibold text-[#159B79]">{c.category}</span>
+                                  <span aria-hidden="true" className="text-[#414846]/50">
                                     ·
                                   </span>
-                                  <span className="font-mono text-slate-400 tabular-nums">
+                                  <span className="font-mono text-[#414846] tabular-nums">
                                     {c.documents?.length ?? 0} docs
                                   </span>
                                 </div>
-                                <h3 className="mt-1 truncate font-display text-lg font-semibold text-slate-50">
+                                <h3 className="mt-1 truncate font-display text-lg font-bold text-[#123C35]">
                                   {c.title}
                                 </h3>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-[#414846]">
                                   {c.patientName} · {c.hospitalName} · Organizer:{' '}
                                   {c.organizerName}
                                 </p>
@@ -1237,7 +1241,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   <div className="flex-1">
                                     <ProgressMeter value={pct} />
                                   </div>
-                                  <span className="font-mono text-xs tabular-nums text-slate-300">
+                                  <span className="font-mono text-xs tabular-nums font-medium text-[#131E1C]">
                                     {formatINR(c.raisedAmount)} /{' '}
                                     {formatINR(c.goalAmount)}
                                   </span>
@@ -1249,16 +1253,16 @@ export const AdminDashboardPage: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => setInspectCampaign(c)}
-                                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-sky-300 hover:border-sky-300/50"
+                                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1.5 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                               >
-                                <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                                <Eye className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                 <span>Inspect</span>
                               </button>
                               {c.status !== 'approved' && (
                                 <button
                                   type="button"
                                   onClick={() => handleRequestApprove(c)}
-                                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg bg-teal-400 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl bg-[#123C35] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                                 >
                                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                                   <span>Approve</span>
@@ -1268,7 +1272,7 @@ export const AdminDashboardPage: React.FC = () => {
                                 <button
                                   type="button"
                                   onClick={() => setRejectTarget(c)}
-                                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-amber-300/40 bg-amber-300/10 px-3 py-1.5 text-xs font-medium text-amber-200 hover:bg-amber-300/20"
+                                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
                                 >
                                   <XCircle className="h-3.5 w-3.5" aria-hidden="true" />
                                   <span>Reject</span>
@@ -1278,7 +1282,7 @@ export const AdminDashboardPage: React.FC = () => {
                                 type="button"
                                 onClick={() => handleRequestRemoveCampaign(c)}
                                 aria-label={`Remove campaign ${c.title}`}
-                                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-rose-400/35 bg-rose-950/30 px-3 py-1.5 text-xs font-medium text-rose-200 hover:bg-rose-950/60"
+                                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                               >
                                 <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>Remove</span>
@@ -1299,29 +1303,51 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             )}
 
-            {/* 2B. VERIFICATION REQUESTS WORKFLOW SECTION */}
+            {/* 2B. VERIFICATION REQUESTS & SPLIT-SCREEN WORKSPACE */}
             {section === 'verifications' && (
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-6">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-teal-300">
-                      Google Drive &amp; Sheets Verification Workflow
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#159B79]">
+                      Clinical Review &amp; Document Verification
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
-                      Verification Requests
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
+                      Split-Screen Verification Workspace
                     </h1>
                   </div>
-                  <span className="font-mono text-xs tabular-nums text-slate-400">
-                    {filteredVerifications.length} submitted requests
+                  <span className="vc-numeric text-xs text-[#414846]">
+                    {pendingCampaigns.length} pending campaigns · {filteredVerifications.length}{' '}
+                    identity requests
                   </span>
                 </div>
 
+                <AdminVerificationWorkspace
+                  campaigns={campaigns}
+                  selectedCampaignId={selectedVerCampaignId}
+                  onSelectCampaign={setSelectedVerCampaignId}
+                  auditLogs={auditLogs}
+                  onApprove={approveCampaign}
+                  onRequestResubmit={requestCampaignResubmission}
+                  onReject={rejectCampaign}
+                  onToast={showToast}
+                />
+
                 <GlassSurface className="flex flex-col gap-4 p-5 sm:p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#123C35]/10 pb-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#159B79]">
+                        Google Drive &amp; Sheets Log
+                      </p>
+                      <h2 className="font-display text-lg font-bold text-[#123C35]">
+                        Identity &amp; Drive Verification Queue
+                      </h2>
+                    </div>
+                  </div>
                   {/* Search and Status Filters */}
                   <div className="grid gap-3 sm:grid-cols-12">
                     <div className="relative sm:col-span-7">
                       <Search
-                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#414846]"
                         aria-hidden="true"
                       />
                       <input
@@ -1329,14 +1355,14 @@ export const AdminDashboardPage: React.FC = () => {
                         value={verSearch}
                         onChange={(e) => setVerSearch(e.target.value)}
                         placeholder="Search by submitter name, email, or document..."
-                        className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/70 pl-10 pr-3.5 text-xs text-slate-100 placeholder:text-slate-500 focus:border-teal-400/60 focus:outline-none focus:ring-2 focus:ring-teal-400/25"
+                        className="vc-input pl-10 text-xs"
                       />
                     </div>
                     <div className="sm:col-span-5">
                       <select
                         value={verStatusFilter}
                         onChange={(e) => setVerStatusFilter(e.target.value as any)}
-                        className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3.5 text-xs text-slate-200 focus:border-teal-400/60 focus:outline-none focus:ring-2 focus:ring-teal-400/25"
+                        className="vc-input text-xs"
                       >
                         <option value="All">All Statuses ({verRequests.length})</option>
                         <option value="Pending">
@@ -1360,12 +1386,12 @@ export const AdminDashboardPage: React.FC = () => {
                   </div>
 
                   {filteredVerifications.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center gap-2 py-12 text-center text-xs text-slate-400">
-                      <ShieldCheck className="h-8 w-8 text-slate-600" aria-hidden="true" />
+                    <div className="flex flex-col items-center justify-center gap-2 py-12 text-center text-xs text-[#414846]">
+                      <ShieldCheck className="h-8 w-8 text-[#159B79]/50" aria-hidden="true" />
                       <p>No verification requests matching your filter criteria.</p>
                     </div>
                   ) : (
-                    <div className="divide-y vc-hairline">
+                    <div className="divide-y divide-[#123C35]/10">
                       {filteredVerifications.map((req) => (
                         <div
                           key={req.requestId}
@@ -1373,31 +1399,31 @@ export const AdminDashboardPage: React.FC = () => {
                         >
                           <div className="flex flex-col gap-1.5">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-display text-sm font-semibold text-slate-100">
+                              <span className="font-display text-sm font-bold text-[#123C35]">
                                 {req.fullName}
                               </span>
                               <span
-                                className={`rounded px-2 py-0.5 font-mono text-[11px] font-semibold ${
+                                className={`rounded-xl px-2.5 py-0.5 font-mono text-[11px] font-semibold ${
                                   req.status === 'Verified'
-                                    ? 'bg-teal-950/60 text-teal-300 border border-teal-500/30'
+                                    ? 'border border-[#159B79]/30 bg-[#DDF3E9] text-[#123C35]'
                                     : req.status === 'Rejected'
-                                    ? 'bg-rose-950/60 text-rose-300 border border-rose-500/30'
+                                    ? 'border border-red-200 bg-red-50 text-red-700'
                                     : req.status === 'Resubmission Required'
-                                    ? 'bg-amber-950/60 text-amber-300 border border-amber-500/30'
-                                    : 'bg-sky-950/60 text-sky-300 border border-sky-500/30'
+                                    ? 'border border-amber-200 bg-amber-50 text-amber-800'
+                                    : 'border border-[#159B79]/25 bg-teal-50 text-[#123C35]'
                                 }`}
                               >
                                 {req.status}
                               </span>
                             </div>
-                            <p className="text-xs text-slate-400">
+                            <p className="text-xs text-[#414846]">
                               {req.email} · {req.mobile} · Submitted{' '}
                               {new Date(req.submittedAt).toLocaleDateString()}
                             </p>
-                            <p className="text-xs text-slate-300">
-                              <strong className="text-slate-400">Document:</strong> {req.documentType}
+                            <p className="text-xs text-[#131E1C]">
+                              <strong className="text-[#414846]">Document:</strong> {req.documentType}
                               {req.remarks && (
-                                <span className="ml-2 text-slate-400">
+                                <span className="ml-2 text-[#414846]">
                                   · <span className="italic">"{req.remarks}"</span>
                                 </span>
                               )}
@@ -1410,9 +1436,9 @@ export const AdminDashboardPage: React.FC = () => {
                                 href={req.documentLink}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-1 text-xs font-medium text-slate-200 hover:border-sky-400/50 hover:text-white"
+                                className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                               >
-                                <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                                <Eye className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                 <span>Inspect Drive File</span>
                               </a>
                             )}
@@ -1425,7 +1451,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   'Documents verified directly by medical compliance officer'
                                 )
                               }
-                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-teal-400/40 bg-teal-950/40 px-3 py-1 text-xs font-medium text-teal-300 hover:bg-teal-950/80"
+                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl bg-[#123C35] px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                             >
                               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Verify</span>
@@ -1442,7 +1468,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   'Please re-upload clearer hospital letterhead estimate with registration seal.'
                                 );
                               }}
-                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-950/40 px-3 py-1 text-xs font-medium text-amber-300 hover:bg-amber-950/80"
+                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
                             >
                               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Request Resubmit</span>
@@ -1459,7 +1485,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   'Document could not be validated with hospital patient billing directory.'
                                 );
                               }}
-                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg border border-rose-400/40 bg-rose-950/40 px-3 py-1 text-xs font-medium text-rose-300 hover:bg-rose-950/80"
+                              className="inline-flex min-h-[34px] items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                             >
                               <XCircle className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Reject</span>
@@ -1478,14 +1504,14 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-sky-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                       Registered Demo Accounts
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                       User Management
                     </h1>
                   </div>
-                  <span className="font-mono text-xs tabular-nums text-slate-400">
+                  <span className="font-mono text-xs tabular-nums text-[#414846]">
                     {filteredUsers.length} accounts
                   </span>
                 </div>
@@ -1493,7 +1519,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <GlassSurface className="grid gap-3 p-5 md:grid-cols-12">
                   <div className="relative md:col-span-6">
                     <Search
-                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400"
+                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#414846]"
                       aria-hidden="true"
                     />
                     <input
@@ -1504,7 +1530,7 @@ export const AdminDashboardPage: React.FC = () => {
                         setUserPage(1);
                       }}
                       placeholder="Search by name, email, phone, or city..."
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-3.5 pl-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input pl-10"
                     />
                   </div>
                   <div className="md:col-span-3">
@@ -1517,7 +1543,7 @@ export const AdminDashboardPage: React.FC = () => {
                         );
                         setUserPage(1);
                       }}
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input"
                     >
                       <option value="All">All Roles</option>
                       <option value="Donor">Donor</option>
@@ -1535,7 +1561,7 @@ export const AdminDashboardPage: React.FC = () => {
                         );
                         setUserPage(1);
                       }}
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input"
                     >
                       <option value="All">All Statuses</option>
                       <option value="Active">Active</option>
@@ -1546,10 +1572,10 @@ export const AdminDashboardPage: React.FC = () => {
 
                 {pagedUsers.length === 0 ? (
                   <GlassSurface className="flex flex-col items-start gap-3 p-10">
-                    <h2 className="font-display text-xl font-semibold text-slate-50">
+                    <h2 className="font-display text-xl font-bold text-[#123C35]">
                       No matching user accounts
                     </h2>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[#414846]">
                       Adjust your search text or role filter to view registered demo
                       users.
                     </p>
@@ -1558,47 +1584,47 @@ export const AdminDashboardPage: React.FC = () => {
                   <GlassSurface className="overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm">
-                        <thead className="border-b vc-hairline text-xs text-slate-400">
+                        <thead className="border-b border-[#123C35]/10 bg-[#F0FCF8] text-xs text-[#414846]">
                           <tr>
-                            <th className="px-5 py-3.5 font-medium">User</th>
-                            <th className="px-5 py-3.5 font-medium">Role</th>
-                            <th className="px-5 py-3.5 font-medium">Joined</th>
-                            <th className="px-5 py-3.5 font-medium">Status</th>
-                            <th className="px-5 py-3.5 text-right font-medium">
+                            <th className="px-5 py-3.5 font-semibold">User</th>
+                            <th className="px-5 py-3.5 font-semibold">Role</th>
+                            <th className="px-5 py-3.5 font-semibold">Joined</th>
+                            <th className="px-5 py-3.5 font-semibold">Status</th>
+                            <th className="px-5 py-3.5 text-right font-semibold">
                               Actions
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/70">
+                        <tbody className="divide-y divide-[#123C35]/10">
                           {pagedUsers.map((acc) => (
                             <tr
                               key={acc.id}
-                              className="transition-colors hover:bg-white/[0.02]"
+                              className="transition-colors hover:bg-[#F0FCF8]/70"
                             >
                               <td className="px-5 py-3.5">
-                                <p className="font-medium text-slate-100">
+                                <p className="font-semibold text-[#131E1C]">
                                   {acc.fullName}
                                 </p>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-[#414846]">
                                   {acc.email}
                                   {acc.location ? ` · ${acc.location}` : ''}
                                 </p>
                               </td>
-                              <td className="px-5 py-3.5 text-xs text-slate-300">
+                              <td className="px-5 py-3.5 text-xs font-medium text-[#414846]">
                                 {acc.role}
                               </td>
-                              <td className="px-5 py-3.5 font-mono text-xs tabular-nums text-slate-400">
+                              <td className="px-5 py-3.5 font-mono text-xs tabular-nums text-[#414846]">
                                 {acc.createdAt}
                               </td>
                               <td className="px-5 py-3.5">
                                 {acc.blocked ? (
-                                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-300">
+                                  <span className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700">
                                     <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
                                     <span>Blocked</span>
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-300">
-                                    <UserCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                                  <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#DDF3E9] px-2.5 py-0.5 text-xs font-semibold text-[#123C35]">
+                                    <UserCheck className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                     <span>Active</span>
                                   </span>
                                 )}
@@ -1608,19 +1634,19 @@ export const AdminDashboardPage: React.FC = () => {
                                   <button
                                     type="button"
                                     onClick={() => setInspectUser(acc)}
-                                    className="inline-flex min-h-[34px] items-center gap-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-sky-300 hover:border-sky-300/50"
+                                    className="inline-flex min-h-[34px] items-center gap-1 rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                                   >
-                                    <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                                    <Eye className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                     <span>Profile</span>
                                   </button>
                                   {acc.role !== 'Admin' && (
                                     <button
                                       type="button"
                                       onClick={() => handleRequestToggleBlock(acc)}
-                                      className={`inline-flex min-h-[34px] items-center gap-1 rounded-lg px-3 py-1 text-xs font-medium ${
+                                      className={`inline-flex min-h-[34px] items-center gap-1 rounded-xl px-3 py-1 text-xs font-semibold transition-colors ${
                                         acc.blocked
-                                          ? 'border border-teal-400/40 bg-teal-950/30 text-teal-200 hover:bg-teal-950/60'
-                                          : 'border border-rose-400/35 bg-rose-950/30 text-rose-200 hover:bg-rose-950/60'
+                                          ? 'border border-[#159B79]/35 bg-[#DDF3E9] text-[#123C35] hover:bg-[#159B79] hover:text-white'
+                                          : 'border border-red-200 bg-red-50 text-red-700 hover:bg-red-100'
                                       }`}
                                     >
                                       {acc.blocked ? (
@@ -1654,16 +1680,16 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-teal-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                       Synchronized Ledger
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                       Donation Management
                     </h1>
                   </div>
-                  <div className="font-mono text-xs tabular-nums text-slate-300">
+                  <div className="font-mono text-xs tabular-nums text-[#414846]">
                     Filtered Total:{' '}
-                    <span className="font-semibold text-amber-300">
+                    <span className="font-bold text-[#123C35]">
                       {formatINR(
                         filteredDonations.reduce((sum, d) => sum + d.amount, 0)
                       )}
@@ -1674,7 +1700,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <GlassSurface className="grid gap-3 p-5 md:grid-cols-12">
                   <div className="relative md:col-span-6">
                     <Search
-                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400"
+                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#414846]"
                       aria-hidden="true"
                     />
                     <input
@@ -1685,7 +1711,7 @@ export const AdminDashboardPage: React.FC = () => {
                         setDonPage(1);
                       }}
                       placeholder="Search donor, campaign, email, or reference ID..."
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-3.5 pl-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input pl-10"
                     />
                   </div>
                   <div className="md:col-span-3">
@@ -1696,12 +1722,13 @@ export const AdminDashboardPage: React.FC = () => {
                         setDonMethod(e.target.value);
                         setDonPage(1);
                       }}
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input"
                     >
                       <option value="All">All Payment Methods</option>
                       <option value="UPI">UPI</option>
                       <option value="Debit/Credit Card">Debit/Credit Card</option>
                       <option value="Net Banking">Net Banking</option>
+                      <option value="International Card">International Card</option>
                     </select>
                   </div>
                   <div className="md:col-span-3">
@@ -1712,7 +1739,7 @@ export const AdminDashboardPage: React.FC = () => {
                         setDonStatus(e.target.value);
                         setDonPage(1);
                       }}
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input"
                     >
                       <option value="All">All Statuses</option>
                       <option value="Completed">Completed</option>
@@ -1723,45 +1750,45 @@ export const AdminDashboardPage: React.FC = () => {
                 </GlassSurface>
 
                 {pagedDonations.length === 0 ? (
-                  <GlassSurface className="p-10 text-sm text-slate-400">
+                  <GlassSurface className="p-10 text-sm text-[#414846]">
                     No donation transactions match your current filters.
                   </GlassSurface>
                 ) : (
                   <GlassSurface className="overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm">
-                        <thead className="border-b vc-hairline text-xs text-slate-400">
+                        <thead className="border-b border-[#123C35]/10 bg-[#F0FCF8] text-xs text-[#414846]">
                           <tr>
-                            <th className="px-5 py-3.5 font-medium">Donor</th>
-                            <th className="px-5 py-3.5 font-medium">Campaign</th>
-                            <th className="px-5 py-3.5 font-medium">Method &amp; Ref</th>
-                            <th className="px-5 py-3.5 font-medium">Date</th>
-                            <th className="px-5 py-3.5 font-medium">Status</th>
-                            <th className="px-5 py-3.5 text-right font-medium">Amount</th>
+                            <th className="px-5 py-3.5 font-semibold">Donor</th>
+                            <th className="px-5 py-3.5 font-semibold">Campaign</th>
+                            <th className="px-5 py-3.5 font-semibold">Method &amp; Ref</th>
+                            <th className="px-5 py-3.5 font-semibold">Date</th>
+                            <th className="px-5 py-3.5 font-semibold">Status</th>
+                            <th className="px-5 py-3.5 text-right font-semibold">Amount</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/70">
+                        <tbody className="divide-y divide-[#123C35]/10">
                           {pagedDonations.map((d) => (
                             <tr
                               key={d.id}
-                              className="transition-colors hover:bg-white/[0.02]"
+                              className="transition-colors hover:bg-[#F0FCF8]/70"
                             >
                               <td className="px-5 py-3.5">
-                                <p className="font-medium text-slate-100">
+                                <p className="font-semibold text-[#131E1C]">
                                   {d.isAnonymous ? 'Anonymous Donor' : d.donorName}
                                   {d.isAnonymous && (
-                                    <span className="ml-1.5 text-[11px] font-normal text-slate-400">
+                                    <span className="ml-1.5 text-[11px] font-normal text-[#414846]">
                                       (Publicly Anonymous)
                                     </span>
                                   )}
                                 </p>
                                 {d.isAnonymous ? (
-                                  <p className="text-xs text-slate-500">
+                                  <p className="text-xs text-[#414846]">
                                     Email hidden for anonymous gift
                                   </p>
                                 ) : (
                                   d.donorEmail && (
-                                    <p className="text-xs text-slate-400">
+                                    <p className="text-xs text-[#414846]">
                                       {d.donorEmail}
                                     </p>
                                   )
@@ -1770,29 +1797,29 @@ export const AdminDashboardPage: React.FC = () => {
                               <td className="px-5 py-3.5 max-w-[230px]">
                                 <Link
                                   to={`/campaigns/${d.campaignId}`}
-                                  className="line-clamp-1 text-xs font-medium text-sky-300 hover:text-amber-200"
+                                  className="line-clamp-1 text-xs font-semibold text-[#123C35] hover:text-[#159B79]"
                                 >
                                   {d.campaignTitle}
                                 </Link>
                               </td>
                               <td className="px-5 py-3.5">
-                                <p className="text-xs text-slate-200">
+                                <p className="text-xs font-medium text-[#131E1C]">
                                   {d.paymentMethod || 'UPI'}
                                 </p>
-                                <p className="font-mono text-[11px] text-slate-400">
+                                <p className="font-mono text-[11px] text-[#414846]">
                                   {d.transactionRef || d.id.toUpperCase()}
                                 </p>
                               </td>
-                              <td className="px-5 py-3.5 font-mono text-xs tabular-nums text-slate-400">
+                              <td className="px-5 py-3.5 font-mono text-xs tabular-nums text-[#414846]">
                                 {d.timestamp.slice(0, 10)}
                               </td>
                               <td className="px-5 py-3.5">
-                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-300">
-                                  <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                                <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#DDF3E9] px-2.5 py-0.5 text-xs font-semibold text-[#123C35]">
+                                  <ShieldCheck className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                   <span>{d.paymentStatus || 'Completed'}</span>
                                 </span>
                               </td>
-                              <td className="px-5 py-3.5 text-right font-mono font-semibold tabular-nums text-amber-300">
+                              <td className="px-5 py-3.5 text-right vc-numeric font-semibold text-[#123C35]">
                                 {formatINR(d.amount)}
                               </td>
                             </tr>
@@ -1816,10 +1843,10 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                       Medical Directory Taxonomy
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                       Category Management
                     </h1>
                   </div>
@@ -1829,7 +1856,7 @@ export const AdminDashboardPage: React.FC = () => {
                       setEditingCategory(null);
                       setCatModalOpen(true);
                     }}
-                    className="inline-flex min-h-[40px] w-fit items-center gap-2 rounded-lg bg-teal-400 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                    className="inline-flex min-h-[40px] w-fit items-center gap-2 rounded-xl bg-[#123C35] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                   >
                     <Plus className="h-4 w-4" aria-hidden="true" />
                     <span>Add Category</span>
@@ -1837,7 +1864,7 @@ export const AdminDashboardPage: React.FC = () => {
                 </div>
 
                 {categories.length === 0 ? (
-                  <GlassSurface className="p-10 text-sm text-slate-400">
+                  <GlassSurface className="p-10 text-sm text-[#414846]">
                     No medical categories defined. Add your first category above.
                   </GlassSurface>
                 ) : (
@@ -1856,45 +1883,47 @@ export const AdminDashboardPage: React.FC = () => {
                         <GlassSurface
                           key={cat.id}
                           className={`flex flex-col justify-between gap-4 p-6 ${
-                            !isActive ? 'opacity-80 border-slate-800/80' : ''
+                            !isActive ? 'opacity-85 bg-[#F0FCF8]/60' : ''
                           }`}
                         >
                           <div>
                             <div className="flex items-start justify-between gap-3">
                               <div>
-                                <h2 className="font-display text-xl font-semibold text-slate-50">
+                                <h2 className="font-display text-xl font-bold text-[#123C35]">
                                   {displayLabel}
                                 </h2>
                                 {displayLabel !== cat.name && (
-                                  <p className="mt-0.5 font-mono text-[11px] text-slate-400">
+                                  <p className="mt-0.5 font-mono text-[11px] text-[#414846]">
                                     Filter key: {cat.name}
                                   </p>
                                 )}
                               </div>
                               <div className="flex flex-col items-end gap-1 shrink-0">
                                 <span
-                                  className={`inline-flex items-center gap-1 text-xs font-medium ${
-                                    isActive ? 'text-teal-300' : 'text-slate-400'
+                                  className={`inline-flex items-center gap-1 rounded-xl px-2 py-0.5 text-xs font-semibold ${
+                                    isActive
+                                      ? 'bg-[#DDF3E9] text-[#123C35]'
+                                      : 'border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846]'
                                   }`}
                                 >
                                   {isActive ? (
-                                    <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                                    <ShieldCheck className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                   ) : (
                                     <EyeOff className="h-3.5 w-3.5" aria-hidden="true" />
                                   )}
                                   <span>{isActive ? 'Active' : 'Inactive'}</span>
                                 </span>
-                                <span className="font-mono text-xs tabular-nums text-amber-300">
+                                <span className="font-mono text-xs font-medium tabular-nums text-[#159B79]">
                                   {catCampaigns.length}{' '}
                                   {catCampaigns.length === 1 ? 'campaign' : 'campaigns'}
                                 </span>
                               </div>
                             </div>
-                            <p className="mt-2.5 text-xs leading-relaxed text-slate-400">
+                            <p className="mt-2.5 text-xs leading-relaxed text-[#414846]">
                               {cat.description}
                             </p>
                             {catCampaigns.length > 0 && (
-                              <p className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] text-amber-300/90">
+                              <p className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-800">
                                 <ShieldAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                                 <span>
                                   In use by {catCampaigns.length}{' '}
@@ -1904,8 +1933,8 @@ export const AdminDashboardPage: React.FC = () => {
                             )}
                           </div>
 
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-t vc-hairline pt-4">
-                            <span className="font-mono text-xs tabular-nums text-teal-300">
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#123C35]/10 pt-4">
+                            <span className="font-mono text-xs font-semibold tabular-nums text-[#123C35]">
                               {formatINR(catRaised)} raised
                             </span>
                             <div className="flex flex-wrap items-center gap-2">
@@ -1922,10 +1951,10 @@ export const AdminDashboardPage: React.FC = () => {
                                     showToast('err', res.error || 'Could not update category status.');
                                   }
                                 }}
-                                className={`inline-flex min-h-[34px] items-center gap-1 rounded-lg border px-3 py-1 text-xs font-medium transition-colors ${
+                                className={`inline-flex min-h-[34px] items-center gap-1 rounded-xl border px-3 py-1 text-xs font-semibold transition-colors ${
                                   isActive
-                                    ? 'border-slate-700 bg-slate-900 text-slate-300 hover:border-amber-300/40 hover:text-amber-200'
-                                    : 'border-teal-400/40 bg-teal-950/35 text-teal-200 hover:bg-teal-950/60'
+                                    ? 'border-[#123C35]/20 bg-[#F0FCF8] text-[#414846] hover:bg-amber-50 hover:text-amber-900'
+                                    : 'border-[#159B79]/35 bg-[#DDF3E9] text-[#123C35] hover:bg-[#159B79] hover:text-white'
                                 }`}
                               >
                                 {isActive ? (
@@ -1946,9 +1975,9 @@ export const AdminDashboardPage: React.FC = () => {
                                   setEditingCategory(cat);
                                   setCatModalOpen(true);
                                 }}
-                                className="inline-flex min-h-[34px] items-center gap-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-200 hover:border-amber-300/40"
+                                className="inline-flex min-h-[34px] items-center gap-1 rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                               >
-                                <Edit3 className="h-3.5 w-3.5" aria-hidden="true" />
+                                <Edit3 className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                                 <span>Edit</span>
                               </button>
                               <button
@@ -1959,10 +1988,10 @@ export const AdminDashboardPage: React.FC = () => {
                                     ? 'Cannot delete while campaigns still use this category'
                                     : 'Delete category'
                                 }
-                                className={`inline-flex min-h-[34px] items-center gap-1 rounded-lg border px-3 py-1 text-xs font-medium ${
+                                className={`inline-flex min-h-[34px] items-center gap-1 rounded-xl border px-3 py-1 text-xs font-semibold transition-colors ${
                                   catCampaigns.length > 0
-                                    ? 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-rose-400/40 hover:text-rose-200'
-                                    : 'border-rose-400/35 bg-rose-950/30 text-rose-200 hover:bg-rose-950/60'
+                                    ? 'border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:border-red-200 hover:bg-red-50 hover:text-red-700'
+                                    : 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100'
                                 }`}
                               >
                                 <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -1983,14 +2012,14 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-xs font-medium tracking-[0.14em] text-sky-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                       Care Liaison Desk Inbox
                     </p>
-                    <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                    <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                       Contact Messages
                     </h1>
                   </div>
-                  <span className="font-mono text-xs tabular-nums text-slate-400">
+                  <span className="font-mono text-xs tabular-nums text-[#414846]">
                     {unreadMessagesCount} unread · {contactMessages.length} total
                   </span>
                 </div>
@@ -1998,7 +2027,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <GlassSurface className="flex flex-col gap-4 p-5">
                   <div className="relative">
                     <Search
-                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400"
+                      className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#414846]"
                       aria-hidden="true"
                     />
                     <input
@@ -2009,11 +2038,11 @@ export const AdminDashboardPage: React.FC = () => {
                         setMsgPage(1);
                       }}
                       placeholder="Search by sender name, email, subject, or message text..."
-                      className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-3.5 pl-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                      className="vc-input pl-10"
                     />
                   </div>
 
-                  <div className="flex flex-wrap gap-2 border-t vc-hairline pt-3">
+                  <div className="flex flex-wrap gap-2 border-t border-[#123C35]/10 pt-3">
                     {(
                       [
                         { id: 'all', label: 'All' },
@@ -2029,10 +2058,10 @@ export const AdminDashboardPage: React.FC = () => {
                           setMsgFilter(tab.id);
                           setMsgPage(1);
                         }}
-                        className={`min-h-[36px] rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                        className={`min-h-[36px] rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                           msgFilter === tab.id
-                            ? 'bg-amber-300 font-semibold text-slate-950'
-                            : 'border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-sky-300/40'
+                            ? 'bg-[#123C35] text-white'
+                            : 'border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]'
                         }`}
                       >
                         {tab.label}
@@ -2042,12 +2071,12 @@ export const AdminDashboardPage: React.FC = () => {
                 </GlassSurface>
 
                 {pagedMessages.length === 0 ? (
-                  <GlassSurface className="p-10 text-sm text-slate-400">
+                  <GlassSurface className="p-10 text-sm text-[#414846]">
                     No contact messages match your active filters.
                   </GlassSurface>
                 ) : (
                   <GlassSurface className="overflow-hidden">
-                    <div className="divide-y divide-slate-800/70">
+                    <div className="divide-y divide-[#123C35]/10">
                       {pagedMessages.map((msg) => (
                         <div
                           key={msg.id}
@@ -2056,37 +2085,37 @@ export const AdminDashboardPage: React.FC = () => {
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2 text-xs">
                               <span
-                                className={`font-medium capitalize ${
+                                className={`font-semibold capitalize ${
                                   msg.status === 'resolved'
-                                    ? 'text-teal-300'
+                                    ? 'text-[#159B79]'
                                     : msg.status === 'read'
-                                    ? 'text-sky-300'
-                                    : 'text-amber-300'
+                                    ? 'text-[#123C35]'
+                                    : 'text-amber-700'
                                 }`}
                               >
                                 {msg.status}
                               </span>
-                              <span aria-hidden="true" className="text-slate-600">
+                              <span aria-hidden="true" className="text-[#414846]/50">
                                 ·
                               </span>
-                              <span className="font-medium text-slate-200">
+                              <span className="font-semibold text-[#131E1C]">
                                 {msg.name}
                               </span>
-                              <span aria-hidden="true" className="text-slate-600">
+                              <span aria-hidden="true" className="text-[#414846]/50">
                                 ·
                               </span>
-                              <span className="text-slate-400">{msg.email}</span>
-                              <span aria-hidden="true" className="text-slate-600">
+                              <span className="text-[#414846]">{msg.email}</span>
+                              <span aria-hidden="true" className="text-[#414846]/50">
                                 ·
                               </span>
-                              <span className="font-mono text-slate-400 tabular-nums">
+                              <span className="font-mono text-[#414846] tabular-nums">
                                 {msg.createdAt.slice(0, 10)}
                               </span>
                             </div>
-                            <h3 className="mt-1 text-sm font-semibold text-slate-50">
+                            <h3 className="mt-1 text-sm font-bold text-[#123C35]">
                               {msg.subject}
                             </h3>
-                            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-300/85">
+                            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#414846]">
                               {msg.message}
                             </p>
                           </div>
@@ -2095,9 +2124,9 @@ export const AdminDashboardPage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => setInspectMessage(msg)}
-                              className="inline-flex min-h-[34px] items-center gap-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-sky-300 hover:border-sky-300/50"
+                              className="inline-flex min-h-[34px] items-center gap-1 rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1 text-xs font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
                             >
-                              <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                              <Mail className="h-3.5 w-3.5 text-[#159B79]" aria-hidden="true" />
                               <span>View</span>
                             </button>
                             {msg.status === 'unread' && (
@@ -2107,7 +2136,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   markContactMessageStatus(msg.id, 'read');
                                   showToast('ok', `Marked inquiry from ${msg.name} as read.`);
                                 }}
-                                className="inline-flex min-h-[34px] items-center rounded-lg border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-200 hover:border-sky-300/40"
+                                className="inline-flex min-h-[34px] items-center rounded-xl border border-[#123C35]/20 bg-white px-3 py-1 text-xs font-semibold text-[#123C35] hover:bg-[#F0FCF8]"
                               >
                                 Mark Read
                               </button>
@@ -2119,7 +2148,7 @@ export const AdminDashboardPage: React.FC = () => {
                                   markContactMessageStatus(msg.id, 'resolved');
                                   showToast('ok', `Marked inquiry from ${msg.name} as resolved.`);
                                 }}
-                                className="inline-flex min-h-[34px] items-center rounded-lg bg-teal-400 px-3 py-1 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                                className="inline-flex min-h-[34px] items-center rounded-xl bg-[#123C35] px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                               >
                                 Resolve
                               </button>
@@ -2128,7 +2157,7 @@ export const AdminDashboardPage: React.FC = () => {
                               type="button"
                               onClick={() => handleRequestDeleteMessage(msg)}
                               aria-label={`Delete message from ${msg.name}`}
-                              className="inline-flex min-h-[34px] items-center rounded-lg border border-rose-400/35 bg-rose-950/30 px-2.5 py-1 text-xs text-rose-200 hover:bg-rose-950/60"
+                              className="inline-flex min-h-[34px] items-center rounded-xl border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                             >
                               <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
@@ -2161,10 +2190,10 @@ export const AdminDashboardPage: React.FC = () => {
             {section === 'settings' && (
               <div className="flex flex-col gap-6">
                 <div>
-                  <p className="text-xs font-medium tracking-[0.14em] text-teal-300">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#159B79]">
                     Administrator Profile &amp; Session
                   </p>
-                  <h1 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                  <h1 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                     Admin Settings
                   </h1>
                 </div>
@@ -2177,7 +2206,7 @@ export const AdminDashboardPage: React.FC = () => {
                   >
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="adm-name" className="text-xs font-medium text-slate-300">
+                        <label htmlFor="adm-name" className="text-xs font-semibold text-[#131E1C]">
                           Administrator Full Name
                         </label>
                         <input
@@ -2185,11 +2214,11 @@ export const AdminDashboardPage: React.FC = () => {
                           type="text"
                           value={adminName}
                           onChange={(e) => setAdminName(e.target.value)}
-                          className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                          className="vc-input"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="adm-email" className="text-xs font-medium text-slate-300">
+                        <label htmlFor="adm-email" className="text-xs font-semibold text-[#131E1C]">
                           Admin Email
                         </label>
                         <input
@@ -2197,11 +2226,11 @@ export const AdminDashboardPage: React.FC = () => {
                           type="email"
                           value={adminEmail}
                           onChange={(e) => setAdminEmail(e.target.value)}
-                          className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                          className="vc-input"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="adm-phone" className="text-xs font-medium text-slate-300">
+                        <label htmlFor="adm-phone" className="text-xs font-semibold text-[#131E1C]">
                           Contact Phone
                         </label>
                         <input
@@ -2209,11 +2238,11 @@ export const AdminDashboardPage: React.FC = () => {
                           type="tel"
                           value={adminPhone}
                           onChange={(e) => setAdminPhone(e.target.value)}
-                          className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 font-mono text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                          className="vc-input font-mono"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="adm-loc" className="text-xs font-medium text-slate-300">
+                        <label htmlFor="adm-loc" className="text-xs font-semibold text-[#131E1C]">
                           Operations Office
                         </label>
                         <input
@@ -2221,7 +2250,7 @@ export const AdminDashboardPage: React.FC = () => {
                           type="text"
                           value={adminLocation}
                           onChange={(e) => setAdminLocation(e.target.value)}
-                          className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                          className="vc-input"
                         />
                       </div>
                     </div>
@@ -2229,10 +2258,10 @@ export const AdminDashboardPage: React.FC = () => {
                     {settingsFeedback && (
                       <p
                         role="status"
-                        className={`text-xs ${
+                        className={`text-xs font-medium ${
                           settingsFeedback.type === 'ok'
-                            ? 'text-teal-300'
-                            : 'text-rose-300'
+                            ? 'text-[#159B79]'
+                            : 'text-red-700'
                         }`}
                       >
                         {settingsFeedback.text}
@@ -2249,10 +2278,10 @@ export const AdminDashboardPage: React.FC = () => {
 
                 <GlassSurface className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
                   <div>
-                    <h2 className="font-display text-lg font-semibold text-slate-50">
+                    <h2 className="font-display text-lg font-bold text-[#123C35]">
                       Reset Demo Platform Data
                     </h2>
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-[#414846]">
                       Clears test modifications in LocalStorage and restores the
                       initial seeded campaigns, accounts, donations, categories,
                       and inbox inquiries.
@@ -2275,7 +2304,7 @@ export const AdminDashboardPage: React.FC = () => {
                         },
                       })
                     }
-                    className="inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-lg border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-xs font-semibold text-amber-200 hover:bg-amber-300/20"
+                    className="inline-flex min-h-[42px] shrink-0 items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-5 py-2 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-100"
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
                     <span>Reset Demo Data</span>
@@ -2284,10 +2313,10 @@ export const AdminDashboardPage: React.FC = () => {
 
                 <GlassSurface className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
                   <div>
-                    <h2 className="font-display text-lg font-semibold text-slate-50">
+                    <h2 className="font-display text-lg font-bold text-[#123C35]">
                       End Administrator Session
                     </h2>
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-[#414846]">
                       Logs out of the demo Admin Console while preserving shared
                       LocalStorage records.
                     </p>
@@ -2295,7 +2324,7 @@ export const AdminDashboardPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="inline-flex min-h-[42px] items-center gap-2 rounded-lg border border-rose-400/40 bg-rose-950/30 px-5 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-950/50"
+                    className="inline-flex min-h-[42px] items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-5 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100"
                   >
                     <LogOut className="h-4 w-4" aria-hidden="true" />
                     <span>Logout</span>
@@ -2315,6 +2344,11 @@ export const AdminDashboardPage: React.FC = () => {
         onReject={(c) => {
           setInspectCampaign(null);
           setRejectTarget(c);
+        }}
+        onOpenSplitReview={(c) => {
+          setInspectCampaign(null);
+          setSelectedVerCampaignId(c.id);
+          setSection('verifications');
         }}
       />
 
@@ -2385,17 +2419,22 @@ export const AdminDashboardPage: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
           onClick={() => setVerRemarksModal({ open: false, request: null, decision: null })}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setVerRemarksModal({ open: false, request: null, decision: null });
+            }
+          }}
         >
           <GlassSurface className="w-full max-w-md p-6">
             <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-4">
-              <h3 className="font-display text-lg font-semibold text-slate-100">
+              <h3 className="font-display text-lg font-bold text-[#123C35]">
                 {verRemarksModal.decision === 'Resubmission Required'
                   ? 'Request Verification Resubmission'
                   : 'Reject Verification Request'}
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#414846]">
                 Provide clinical reviewer remarks for {verRemarksModal.request.fullName} (
                 {verRemarksModal.request.email}). This note will be recorded in Google Sheets and displayed to the user.
               </p>
@@ -2404,13 +2443,13 @@ export const AdminDashboardPage: React.FC = () => {
                 value={verRemarksInput}
                 onChange={(e) => setVerRemarksInput(e.target.value)}
                 placeholder="Enter review notes or missing requirement..."
-                className="w-full rounded-lg border border-slate-800 bg-slate-950/70 p-3 text-xs text-slate-100 placeholder:text-slate-500 focus:border-teal-400 focus:outline-none"
+                className="vc-input py-2.5 text-xs"
               />
               <div className="flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setVerRemarksModal({ open: false, request: null, decision: null })}
-                  className="rounded-lg border border-slate-800 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-900"
+                  className="min-h-[38px] rounded-xl border border-[#123C35]/20 bg-white px-4 py-1.5 text-xs font-semibold text-[#414846] hover:bg-[#F0FCF8]"
                 >
                   Cancel
                 </button>
@@ -2423,7 +2462,7 @@ export const AdminDashboardPage: React.FC = () => {
                       verRemarksInput
                     )
                   }
-                  className="rounded-lg bg-teal-400 px-3.5 py-1.5 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+                  className="min-h-[38px] rounded-xl bg-[#123C35] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#159B79]"
                 >
                   Confirm Decision
                 </button>

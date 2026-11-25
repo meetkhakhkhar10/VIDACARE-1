@@ -294,25 +294,26 @@ export const FaqPage: React.FC = () => {
   return (
     <div className="flex flex-col">
       {/* Header & Search */}
-      <section className="pt-12 pb-10 sm:pt-16 sm:pb-12">
+      <section className="bg-[#F8FAF7] pt-12 pb-10 sm:pt-16 sm:pb-12">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 border-b vc-hairline pb-10 md:flex-row md:items-end">
+          <div className="flex flex-col justify-between gap-6 border-b border-[#123C35]/12 pb-10 md:flex-row md:items-end">
             <SectionHeading
+              as="h1"
               kicker="Help Center & Guidelines"
               title="Frequently Asked Questions"
               description="Clear answers on registration, creating a verified medical fundraiser, making donations, tracking receipts, and reaching the VidaCare Care Liaison Desk."
             />
-            <div className="flex items-center gap-5 text-xs text-slate-400 shrink-0">
+            <div className="flex items-center gap-5 text-xs text-[#414846] shrink-0">
               <div className="flex flex-col">
-                <span className="text-slate-400">Topics Covered</span>
-                <span className="font-mono text-lg font-semibold tabular-nums text-amber-300">
+                <span className="font-medium text-[#414846]">Topics Covered</span>
+                <span className="vc-numeric font-display text-lg font-bold text-[#123C35]">
                   {FAQ_TOPICS.length} Sections
                 </span>
               </div>
-              <div className="h-8 w-px bg-slate-800" aria-hidden="true" />
+              <div className="h-8 w-px bg-[#123C35]/15" aria-hidden="true" />
               <div className="flex flex-col">
-                <span className="text-slate-400">Answers Indexed</span>
-                <span className="font-mono text-lg font-semibold tabular-nums text-sky-300">
+                <span className="font-medium text-[#414846]">Answers Indexed</span>
+                <span className="vc-numeric font-display text-lg font-bold text-[#159B79]">
                   {FAQ_ENTRIES.length} Guides
                 </span>
               </div>
@@ -324,7 +325,7 @@ export const FaqPage: React.FC = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="relative flex-1">
                 <Search
-                  className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#414846]"
                   aria-hidden="true"
                 />
                 <input
@@ -333,14 +334,14 @@ export const FaqPage: React.FC = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search questions about login, fundraising, verification, UPI, receipts..."
                   aria-label="Search frequently asked questions"
-                  className="min-h-[44px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-10 pl-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none focus:ring-2 focus:ring-amber-300/20"
+                  className="vc-input pr-10 pl-10"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
                     aria-label="Clear FAQ search"
-                    className="absolute top-1/2 right-2.5 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:text-white"
+                    className="absolute top-1/2 right-2.5 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -351,7 +352,7 @@ export const FaqPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleToggleAllVisible}
-                  className="min-h-[44px] rounded-lg border border-slate-800 bg-slate-900/70 px-4 py-2 text-xs font-medium text-slate-200 whitespace-nowrap transition-colors hover:border-sky-300/40 hover:text-white"
+                  className="min-h-[44px] rounded-[10px] border border-[#123C35]/20 bg-[#F8FAF7] px-4 py-2 text-xs font-semibold text-[#123C35] whitespace-nowrap transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
                 >
                   {allVisibleExpanded ? 'Collapse All Answers' : 'Expand All Answers'}
                 </button>
@@ -361,15 +362,15 @@ export const FaqPage: React.FC = () => {
             <div
               role="group"
               aria-label="Filter FAQs by topic"
-              className="flex flex-wrap items-center gap-2 border-t vc-hairline pt-4"
+              className="flex flex-wrap items-center gap-2 border-t border-[#123C35]/10 pt-4"
             >
               <button
                 type="button"
                 onClick={() => setSelectedTopic('All')}
-                className={`min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 ${
+                className={`min-h-[40px] rounded-[10px] px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
                   selectedTopic === 'All'
-                    ? 'bg-amber-300 font-semibold text-slate-950 shadow-[0_0_20px_-6px_rgba(251,191,36,0.55)]'
-                    : 'border border-slate-800 bg-slate-900/65 text-slate-300 hover:border-sky-300/40 hover:text-white'
+                    ? 'bg-[#123C35] text-white shadow-sm'
+                    : 'border border-[#123C35]/15 bg-[#F8FAF7] text-[#414846] hover:border-[#159B79]/50 hover:bg-[#DDF3E9] hover:text-[#123C35]'
                 }`}
               >
                 All Topics
@@ -381,10 +382,10 @@ export const FaqPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => setSelectedTopic(topic)}
-                    className={`min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 ${
+                    className={`min-h-[40px] rounded-[10px] px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
                       active
-                        ? 'bg-amber-300 font-semibold text-slate-950 shadow-[0_0_20px_-6px_rgba(251,191,36,0.55)]'
-                        : 'border border-slate-800 bg-slate-900/65 text-slate-300 hover:border-sky-300/40 hover:text-white'
+                        ? 'bg-[#123C35] text-white shadow-sm'
+                        : 'border border-[#123C35]/15 bg-[#F8FAF7] text-[#414846] hover:border-[#159B79]/50 hover:bg-[#DDF3E9] hover:text-[#123C35]'
                     }`}
                   >
                     {topic}
@@ -397,15 +398,17 @@ export const FaqPage: React.FC = () => {
       </section>
 
       {/* FAQ Accordion Sections */}
-      <section className="pb-16">
+      <section className="bg-[#F8FAF7] pb-16">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
           {groupedSections.length === 0 ? (
             <GlassSurface className="flex flex-col items-center gap-4 p-12 text-center">
-              <HelpCircle className="h-8 w-8 text-amber-300" aria-hidden="true" />
-              <h2 className="font-display text-2xl font-semibold text-slate-50">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#DDF3E9] text-[#159B79]">
+                <HelpCircle className="h-6 w-6" aria-hidden="true" />
+              </div>
+              <h2 className="font-display text-2xl font-bold text-[#123C35]">
                 No matching FAQ guides found
               </h2>
-              <p className="max-w-md text-sm leading-relaxed text-slate-300/85">
+              <p className="max-w-md text-sm leading-relaxed text-[#414846]">
                 Try another keyword or clear your topic filter. If your question
                 isn’t listed, our Care Liaison Desk is ready to assist.
               </p>
@@ -413,7 +416,7 @@ export const FaqPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex min-h-[42px] items-center justify-center rounded-lg bg-teal-400 px-5 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-teal-300"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#123C35] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#159B79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
                 >
                   Reset Search &amp; Filters
                 </button>
@@ -430,23 +433,23 @@ export const FaqPage: React.FC = () => {
                   <div key={group.topic} className="flex flex-col gap-4">
                     <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-300/30 bg-amber-300/10 text-amber-300">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#159B79]/25 bg-[#DDF3E9] text-[#123C35]">
                           <Icon className="h-5 w-5" aria-hidden="true" />
                         </div>
                         <div>
-                          <h2 className="font-display text-xl font-semibold text-slate-50 sm:text-2xl">
+                          <h2 className="font-display text-xl font-bold text-[#123C35] sm:text-2xl">
                             {group.topic}
                           </h2>
-                          <p className="text-xs text-slate-400">{group.summary}</p>
+                          <p className="text-xs text-[#414846]">{group.summary}</p>
                         </div>
                       </div>
-                      <span className="font-mono text-xs tabular-nums text-slate-400">
+                      <span className="vc-numeric text-xs font-medium text-[#414846]">
                         {group.items.length}{' '}
                         {group.items.length === 1 ? 'question' : 'questions'}
                       </span>
                     </div>
 
-                    <GlassSurface className="divide-y divide-slate-800/80 overflow-hidden">
+                    <GlassSurface className="divide-y divide-[#123C35]/10 overflow-hidden">
                       {group.items.map((item) => {
                         const isOpen = !!openIds[item.id] || searchQuery.trim().length > 0;
                         const panelId = `faq-panel-${item.id}`;
@@ -457,13 +460,13 @@ export const FaqPage: React.FC = () => {
                               aria-expanded={isOpen}
                               aria-controls={panelId}
                               onClick={() => toggleItem(item.id)}
-                              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 sm:px-6 sm:py-5"
+                              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-[#F8FAF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#159B79] sm:px-6 sm:py-5"
                             >
-                              <span className="text-sm font-medium text-slate-100 sm:text-base">
+                              <span className="text-sm font-semibold text-[#131E1C] sm:text-base">
                                 {item.question}
                               </span>
                               <ChevronDown
-                                className={`h-4 w-4 shrink-0 text-amber-300 transition-transform duration-200 ${
+                                className={`h-4 w-4 shrink-0 text-[#159B79] transition-transform duration-200 ${
                                   isOpen ? 'rotate-180' : ''
                                 }`}
                                 aria-hidden="true"
@@ -472,7 +475,7 @@ export const FaqPage: React.FC = () => {
                             {isOpen && (
                               <div
                                 id={panelId}
-                                className="border-t border-slate-800/60 bg-slate-950/35 px-5 py-4 text-sm leading-relaxed text-slate-300 sm:px-6"
+                                className="border-t border-[#123C35]/10 bg-[#F8FAF7] px-5 py-4 text-sm leading-relaxed text-[#414846] sm:px-6"
                               >
                                 {item.answer}
                               </div>
@@ -488,19 +491,19 @@ export const FaqPage: React.FC = () => {
           )}
 
           {/* Contact Support CTA */}
-          <GlassSurface className="mt-14 flex flex-col items-start justify-between gap-6 border-amber-300/25 p-8 sm:flex-row sm:items-center sm:p-10">
+          <GlassSurface className="mt-14 flex flex-col items-start justify-between gap-6 p-8 sm:flex-row sm:items-center sm:p-10">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-teal-400/35 bg-teal-400/10 text-teal-300">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#159B79]/25 bg-[#DDF3E9] text-[#159B79]">
                 <Mail className="h-6 w-6" aria-hidden="true" />
               </div>
               <div className="max-w-xl">
-                <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+                <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                   Care Liaison Desk
                 </p>
-                <h2 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+                <h2 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
                   Still have questions about a campaign or donation?
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300/85">
+                <p className="mt-2 text-sm leading-relaxed text-[#414846]">
                   Reach our dedicated Care Liaison team for help with hospital
                   verification, receipt lookups, or family fundraiser setup.
                 </p>

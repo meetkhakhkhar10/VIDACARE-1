@@ -20,7 +20,7 @@ export const AuthSplitLayout: React.FC<AuthSplitLayoutProps> = ({
   imageAlt = 'Compassionate physician consulting with a mother and young child',
 }) => {
   return (
-    <section className="py-10 sm:py-14 lg:py-16">
+    <section className="bg-[#F8FAF7] py-10 sm:py-14 lg:py-16">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <div className="grid items-stretch gap-8 lg:grid-cols-12">
           {/* Visual & Brand Story Panel — forest green accent column */}
@@ -51,7 +51,7 @@ export const AuthSplitLayout: React.FC<AuthSplitLayoutProps> = ({
                 />
                 <div className="absolute inset-x-4 bottom-4 flex items-center justify-between text-xs text-white">
                   <span>Together, We Make Healing Possible.</span>
-                  <span className="font-mono text-[#DDF3E9] font-semibold">97.4% to Care</span>
+                  <span className="vc-numeric font-semibold text-[#DDF3E9]">0% Platform Fee</span>
                 </div>
               </div>
 
@@ -65,7 +65,7 @@ export const AuthSplitLayout: React.FC<AuthSplitLayoutProps> = ({
                     Hospital-verified fundraisers &amp; direct clinical settlement
                   </span>
                 </div>
-                <p className="text-[11px] leading-relaxed text-[#DDF3E9]/60">
+                <p className="text-[11px] leading-relaxed text-[#DDF3E9]/85">
                   Preview notice: Authentication and OTP screens run as a
                   frontend simulation stored locally in your browser.
                 </p>

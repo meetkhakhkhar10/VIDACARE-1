@@ -18,6 +18,7 @@ import {
   writeVidaCareStore,
 } from '../lib/storage';
 import {
+  AdminAuditEntry,
   CategoryItem,
   ContactMessage,
   DashboardNotification,
@@ -41,6 +42,9 @@ interface RecordDonationInput {
   donorPhone?: string;
   isAnonymous: boolean;
   amount: number;
+  platformTipAmount?: number;
+  wants80GReceipt?: boolean;
+  panNumber?: string;
   paymentMethod?: PaymentMethodType;
   transactionRef?: string;
   message?: string;
@@ -70,6 +74,9 @@ interface CreateCampaignInput {
   category: MedicalCategory;
   hospitalName: string;
   location: string;
+  treatingDoctor?: string;
+  organizerRelation?: string;
+  settlementPreference?: 'Direct Hospital Billing' | 'Patient Reimbursement';
   goalAmount: number;
   summary: string;
   treatmentDetails: string;
@@ -105,6 +112,7 @@ interface VidaCareContextValue {
   categories: CategoryItem[];
   activeCategories: CategoryItem[];
   contactMessages: ContactMessage[];
+  auditLogs: AdminAuditEntry[];
   rememberedIdentifier: string;
   totalRaisedPlatform: number;
   totalDonorsPlatform: number;
@@ -146,6 +154,10 @@ interface VidaCareContextValue {
   rejectCampaign: (
     campaignId: string,
     reason: string
+  ) => { ok: boolean; error?: string };
+  requestCampaignResubmission: (
+    campaignId: string,
+    note: string
   ) => { ok: boolean; error?: string };
   removeCampaign: (campaignId: string) => { ok: boolean; error?: string };
   toggleBlockAccount: (
@@ -328,6 +340,12 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
       donorPhone: input.donorPhone?.trim() || undefined,
       isAnonymous: input.isAnonymous,
       amount: roundedAmount,
+      platformTipAmount:
+        typeof input.platformTipAmount === 'number' && input.platformTipAmount > 0
+          ? Math.round(input.platformTipAmount)
+          : 0,
+      wants80GReceipt: Boolean(input.wants80GReceipt),
+      panNumber: input.panNumber?.trim().toUpperCase() || undefined,
       paymentMethod: input.paymentMethod,
       paymentStatus: 'Completed',
       transactionRef: txRef,
@@ -687,8 +705,9 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
       category: input.category,
       hospitalName: input.hospitalName.trim(),
       location: input.location.trim(),
+      treatingDoctor: input.treatingDoctor?.trim() || undefined,
       organizerName: store.user.fullName,
-      organizerRelation: 'Family / Coordinator',
+      organizerRelation: input.organizerRelation?.trim() || 'Family / Coordinator',
       summary: input.summary.trim(),
       treatmentDetails: input.treatmentDetails.trim() || input.summary.trim(),
       story: [input.summary.trim()],
@@ -698,6 +717,9 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
       donorCount: 0,
       daysRemaining: 30,
       verifiedBy: 'Pending Hospital Verification',
+      hospitalVerified: false,
+      eligible80G: false,
+      settlementPreference: input.settlementPreference || 'Direct Hospital Billing',
       status: 'pending',
       featured: false,
       isUrgent: false,
@@ -909,6 +931,17 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
         }
       : null;
 
+    const auditEntry: AdminAuditEntry = {
+      id: generateUniqueId('audit'),
+      campaignId: target.id,
+      action: 'approved',
+      actor: store.user.fullName,
+      note:
+        verifiedByNote?.trim() ||
+        'Approved after hospital & clinical documentation review.',
+      timestamp: new Date().toISOString(),
+    };
+
     setStore((prev) => ({
       ...prev,
       campaigns: prev.campaigns.map((c) =>
@@ -917,6 +950,8 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
               ...c,
               status: 'approved',
               rejectionReason: undefined,
+              hospitalVerified: true,
+              eligible80G: true,
               verifiedBy:
                 verifiedByNote?.trim() ||
                 (c.verifiedBy.includes('Pending') ||
@@ -928,6 +963,7 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
           : c
       ),
       notifications: notif ? [notif, ...prev.notifications] : prev.notifications,
+      auditLogs: [auditEntry, ...(prev.auditLogs ?? [])].slice(0, 100),
     }));
 
     return { ok: true };
@@ -962,6 +998,15 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
         }
       : null;
 
+    const auditEntry: AdminAuditEntry = {
+      id: generateUniqueId('audit'),
+      campaignId: target.id,
+      action: 'rejected',
+      actor: store.user.fullName,
+      note: cleanReason,
+      timestamp: new Date().toISOString(),
+    };
+
     setStore((prev) => ({
       ...prev,
       campaigns: prev.campaigns.map((c) =>
@@ -970,11 +1015,70 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
               ...c,
               status: 'rejected',
               rejectionReason: cleanReason,
+              hospitalVerified: false,
               verifiedBy: 'Declined in Admin Review',
             }
           : c
       ),
       notifications: notif ? [notif, ...prev.notifications] : prev.notifications,
+      auditLogs: [auditEntry, ...(prev.auditLogs ?? [])].slice(0, 100),
+    }));
+
+    return { ok: true };
+  };
+
+  const requestCampaignResubmission = (
+    campaignId: string,
+    note: string
+  ): { ok: boolean; error?: string } => {
+    if (store.user?.role !== 'Admin') {
+      return { ok: false, error: 'Admin access required.' };
+    }
+    const cleanNote = note.trim();
+    if (!cleanNote) {
+      return { ok: false, error: 'Please specify which documents require resubmission.' };
+    }
+    const target = store.campaigns.find((c) => c.id === campaignId);
+    if (!target) {
+      return { ok: false, error: 'Campaign not found.' };
+    }
+
+    const notif: DashboardNotification | null = target.creatorId
+      ? {
+          id: generateUniqueId('notif-resub'),
+          userId: target.creatorId,
+          type: 'info',
+          title: `Document Resubmission Requested: ${target.title}`,
+          message: `Clinical review note: ${cleanNote}`,
+          campaignId: target.id,
+          createdAt: new Date().toISOString(),
+          read: false,
+        }
+      : null;
+
+    const auditEntry: AdminAuditEntry = {
+      id: generateUniqueId('audit'),
+      campaignId: target.id,
+      action: 'resubmission_requested',
+      actor: store.user.fullName,
+      note: cleanNote,
+      timestamp: new Date().toISOString(),
+    };
+
+    setStore((prev) => ({
+      ...prev,
+      campaigns: prev.campaigns.map((c) =>
+        c.id === campaignId
+          ? {
+              ...c,
+              status: 'pending',
+              rejectionReason: cleanNote,
+              verifiedBy: 'Resubmission Requested by Clinical Desk',
+            }
+          : c
+      ),
+      notifications: notif ? [notif, ...prev.notifications] : prev.notifications,
+      auditLogs: [auditEntry, ...(prev.auditLogs ?? [])].slice(0, 100),
     }));
 
     return { ok: true };
@@ -1241,21 +1345,24 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
 
   const getDashboardPathForRole = (role?: UserRole): string => {
     if (role === 'Admin') return '/admin';
-    if (role === 'Patient/Fundraiser') return '/dashboard?view=fundraiser';
-    return '/dashboard?view=donor';
+    if (role === 'Patient/Fundraiser' || role === 'Care Coordinator') {
+      return '/dashboard/campaigner';
+    }
+    return '/dashboard/donor';
   };
 
   const signInMock = (email: string, fullName?: string, roleOverride?: UserRole) => {
+    const cleanEmail = typeof email === 'string' ? email.trim() : '';
     const matchedAccount = store.accounts.find(
-      (a) => a.email.toLowerCase() === email.trim().toLowerCase()
+      (a) => a.email.toLowerCase() === cleanEmail.toLowerCase()
     );
     const role: UserRole =
       roleOverride ||
-      (matchedAccount ? matchedAccount.role : (email.toLowerCase().includes('admin') ? 'Admin' : 'Donor'));
+      (matchedAccount ? matchedAccount.role : (cleanEmail.toLowerCase().includes('admin') ? 'Admin' : 'Donor'));
     const derivedName =
       fullName?.trim() ||
       matchedAccount?.fullName ||
-      email
+      cleanEmail
         .split('@')[0]
         .replace(/[._-]/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
@@ -1265,7 +1372,7 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
       user: {
         id: matchedAccount ? matchedAccount.id : generateUniqueId('usr'),
         fullName: derivedName || 'Care Supporter',
-        email: email.trim(),
+        email: cleanEmail,
         role: role,
         joinedAt: matchedAccount?.createdAt || new Date().toISOString().slice(0, 10),
       },
@@ -1334,6 +1441,7 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
         categories: store.categories,
         activeCategories,
         contactMessages: store.contactMessages,
+        auditLogs: store.auditLogs ?? [],
         rememberedIdentifier: store.rememberedIdentifier ?? '',
         totalRaisedPlatform,
         totalDonorsPlatform,
@@ -1356,6 +1464,7 @@ export function VidaCareProvider({ children }: { children: React.ReactNode }) {
         markAllNotificationsRead,
         approveCampaign,
         rejectCampaign,
+        requestCampaignResubmission,
         removeCampaign,
         toggleBlockAccount,
         addCategory,

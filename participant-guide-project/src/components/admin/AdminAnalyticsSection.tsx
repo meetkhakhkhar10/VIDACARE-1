@@ -253,10 +253,10 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
       {/* Header & Date Filter Bar */}
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
-          <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+          <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
             Platform Telemetry (Demo Store)
           </p>
-          <h2 className="mt-1 font-display text-2xl font-semibold text-slate-50">
+          <h2 className="mt-1 font-display text-2xl font-bold text-[#123C35]">
             Reports &amp; Analytics
           </h2>
         </div>
@@ -274,10 +274,10 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
               key={item.id}
               type="button"
               onClick={() => setPreset(item.id)}
-              className={`min-h-[38px] rounded-lg px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`min-h-[38px] rounded-xl px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
                 preset === item.id
-                  ? 'bg-amber-300 text-slate-950 font-semibold'
-                  : 'border border-slate-800 bg-slate-900/70 text-slate-300 hover:border-sky-300/40 hover:text-white'
+                  ? 'bg-[#123C35] text-white shadow-sm'
+                  : 'border border-[#123C35]/18 bg-white text-[#414846] hover:border-[#159B79] hover:text-[#123C35]'
               }`}
             >
               {item.label}
@@ -288,12 +288,12 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
 
       {preset === 'custom' && (
         <GlassSurface className="flex flex-wrap items-center gap-4 p-4">
-          <div className="flex items-center gap-2 text-xs text-slate-300">
-            <Calendar className="h-4 w-4 text-amber-300" aria-hidden="true" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#123C35]">
+            <Calendar className="h-4 w-4 text-[#159B79]" aria-hidden="true" />
             <span>Date Window:</span>
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="analytics-from" className="text-xs text-slate-400">
+            <label htmlFor="analytics-from" className="text-xs font-medium text-[#414846]">
               From
             </label>
             <input
@@ -301,11 +301,11 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
               type="date"
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
-              className="min-h-[38px] rounded-lg border border-slate-800 bg-slate-950/80 px-3 font-mono text-xs text-slate-100 focus:border-amber-300/60 focus:outline-none"
+              className="vc-input min-h-[38px] w-auto px-3 font-mono text-xs"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="analytics-to" className="text-xs text-slate-400">
+            <label htmlFor="analytics-to" className="text-xs font-medium text-[#414846]">
               To
             </label>
             <input
@@ -313,7 +313,7 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
               type="date"
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
-              className="min-h-[38px] rounded-lg border border-slate-800 bg-slate-950/80 px-3 font-mono text-xs text-slate-100 focus:border-amber-300/60 focus:outline-none"
+              className="vc-input min-h-[38px] w-auto px-3 font-mono text-xs"
             />
           </div>
         </GlassSurface>
@@ -322,31 +322,31 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
       {/* Summary KPI Row */}
       <div className="grid gap-4 sm:grid-cols-3">
         <GlassSurface className="flex flex-col gap-1.5 p-5">
-          <span className="text-xs text-slate-400">Recorded Gift Volume</span>
-          <span className="font-mono text-2xl font-semibold tabular-nums text-teal-300">
+          <span className="text-xs font-medium text-[#414846]">Recorded Gift Volume</span>
+          <span className="vc-numeric font-display text-2xl font-bold text-[#123C35]">
             {formatINR(totalFilteredDonated)}
           </span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#414846]">
             Across {filteredDonations.length} transactions in range
           </span>
         </GlassSurface>
 
         <GlassSurface className="flex flex-col gap-1.5 p-5">
-          <span className="text-xs text-slate-400">Average Contribution</span>
-          <span className="font-mono text-2xl font-semibold tabular-nums text-amber-300">
+          <span className="text-xs font-medium text-[#414846]">Average Contribution</span>
+          <span className="vc-numeric font-display text-2xl font-bold text-[#159B79]">
             {formatINR(avgDonation)}
           </span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#414846]">
             Mean donation size in period
           </span>
         </GlassSurface>
 
         <GlassSurface className="flex flex-col gap-1.5 p-5">
-          <span className="text-xs text-slate-400">New Member Signups</span>
-          <span className="font-mono text-2xl font-semibold tabular-nums text-sky-300">
+          <span className="text-xs font-medium text-[#414846]">New Member Signups</span>
+          <span className="vc-numeric font-display text-2xl font-bold text-[#123C35]">
             {filteredAccounts.length}
           </span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[#414846]">
             {filteredCampaigns.length} campaigns created in range
           </span>
         </GlassSurface>
@@ -356,17 +356,17 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
       <GlassSurface className="flex flex-col gap-5 p-6">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2.5">
-            <TrendingUp className="h-4 w-4 text-amber-300" aria-hidden="true" />
-            <h3 className="font-display text-xl font-semibold text-slate-50">
+            <TrendingUp className="h-4 w-4 text-[#159B79]" aria-hidden="true" />
+            <h3 className="font-display text-xl font-bold text-[#123C35]">
               Donation Trends
             </h3>
           </div>
           {activePoint && (
-            <div className="font-mono text-xs tabular-nums text-slate-300">
-              <span className="text-amber-300">{activePoint.date}</span>
-              <span className="mx-2 text-slate-600">·</span>
-              <span className="text-teal-300">{formatINR(activePoint.total)}</span>
-              <span className="mx-2 text-slate-600">·</span>
+            <div className="vc-numeric text-xs text-[#414846]">
+              <span className="font-semibold text-[#123C35]">{activePoint.date}</span>
+              <span className="mx-2 text-[#414846]/50">·</span>
+              <span className="font-semibold text-[#159B79]">{formatINR(activePoint.total)}</span>
+              <span className="mx-2 text-[#414846]/50">·</span>
               <span>
                 {activePoint.count}{' '}
                 {activePoint.count === 1 ? 'donation' : 'donations'}
@@ -376,12 +376,12 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
         </div>
 
         {dailyTrend.length === 0 ? (
-          <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-8 text-center text-sm text-slate-400">
+          <div className="rounded-xl border border-[#123C35]/12 bg-[#F8FAF7] p-8 text-center text-sm text-[#414846]">
             No donation transactions recorded inside the selected date window.
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="flex h-52 items-end gap-3 rounded-xl border border-slate-800/80 bg-slate-950/55 px-4 pt-6 pb-3 sm:gap-5 sm:px-6">
+            <div className="flex h-52 items-end gap-3 overflow-x-auto rounded-xl border border-[#123C35]/12 bg-[#F8FAF7] px-4 pt-6 pb-3 sm:gap-5 sm:px-6">
               {dailyTrend.map((day) => {
                 const heightPct = Math.max(
                   10,
@@ -395,23 +395,23 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
                     onMouseEnter={() => setHoveredDay(day.date)}
                     onFocus={() => setHoveredDay(day.date)}
                     onClick={() => setHoveredDay(day.date)}
-                    className="group flex h-full flex-1 flex-col items-center justify-end gap-2 focus:outline-none"
+                    className="group flex h-full min-w-[44px] flex-1 flex-col items-center justify-end gap-2 focus:outline-none"
                     aria-label={`${day.date}: ${formatINR(day.total)} across ${day.count} donations`}
                   >
-                    <span className="font-mono text-[10px] tabular-nums text-slate-400 group-hover:text-amber-200">
+                    <span className="vc-numeric text-[10px] font-medium text-[#414846] group-hover:text-[#123C35]">
                       {formatINR(day.total)}
                     </span>
                     <div className="flex w-full max-w-[44px] flex-1 items-end">
                       <div
                         style={{ height: `${heightPct}%` }}
-                        className={`w-full rounded-t-md transition-all duration-150 ${
+                        className={`w-full rounded-t-lg transition-all duration-150 ${
                           isSelected
-                            ? 'bg-gradient-to-t from-amber-400 to-teal-300 shadow-[0_0_20px_-4px_rgba(45,212,191,0.5)]'
-                            : 'bg-gradient-to-t from-sky-500/55 to-sky-300/80 group-hover:from-amber-400/80 group-hover:to-amber-200'
+                            ? 'bg-gradient-to-t from-[#123C35] to-[#159B79] shadow-sm'
+                            : 'bg-[#159B79]/45 group-hover:bg-[#159B79]'
                         }`}
                       />
                     </div>
-                    <span className="font-mono text-[10px] tabular-nums text-slate-400">
+                    <span className="vc-numeric text-[10px] font-medium text-[#414846]">
                       {day.date.slice(5)}
                     </span>
                   </button>
@@ -426,30 +426,30 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
       <div className="grid gap-6 lg:grid-cols-12">
         <GlassSurface className="flex flex-col gap-4 p-6 lg:col-span-7">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-xl font-semibold text-slate-50">
+            <h3 className="font-display text-xl font-bold text-[#123C35]">
               Campaign Statistics by Category
             </h3>
-            <span className="font-mono text-xs tabular-nums text-slate-400">
+            <span className="vc-numeric text-xs font-medium text-[#414846]">
               {filteredCampaigns.length} campaigns
             </span>
           </div>
 
           {categoryStats.every((s) => s.count === 0) ? (
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[#414846]">
               No campaigns created within this date window.
             </p>
           ) : (
             <div className="flex flex-col gap-3.5">
               {categoryStats.map((stat) => (
                 <div key={stat.name} className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-200">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-semibold text-[#131E1C]">
                       {stat.name}{' '}
-                      <span className="font-mono text-slate-400">
+                      <span className="vc-numeric font-normal text-[#414846]">
                         ({stat.count})
                       </span>
                     </span>
-                    <span className="font-mono tabular-nums text-amber-300">
+                    <span className="vc-numeric font-semibold text-[#123C35]">
                       {formatINR(stat.raised)} / {formatINR(stat.goal)}
                     </span>
                   </div>
@@ -462,34 +462,34 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
 
         <GlassSurface className="flex flex-col gap-4 p-6 lg:col-span-5">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-xl font-semibold text-slate-50">
+            <h3 className="font-display text-xl font-bold text-[#123C35]">
               User Growth
             </h3>
-            <span className="font-mono text-xs tabular-nums text-sky-300">
+            <span className="vc-numeric text-xs font-semibold text-[#159B79]">
               {filteredAccounts.length} accounts
             </span>
           </div>
 
           {userGrowthByMonth.length === 0 ? (
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[#414846]">
               No user registrations inside this date range.
             </p>
           ) : (
-            <div className="flex flex-col divide-y divide-slate-800/70">
+            <div className="flex flex-col divide-y vc-hairline">
               {userGrowthByMonth.map((row) => (
                 <div
                   key={row.month}
                   className="flex items-center justify-between py-3 first:pt-0 last:pb-0 text-xs"
                 >
                   <div>
-                    <p className="font-mono font-semibold text-slate-100">
+                    <p className="vc-numeric font-semibold text-[#131E1C]">
                       {row.month}
                     </p>
-                    <p className="text-slate-400">
+                    <p className="text-[#414846]">
                       {row.donors} donors · {row.fundraisers} fundraisers
                     </p>
                   </div>
-                  <span className="font-mono text-base font-semibold tabular-nums text-teal-300">
+                  <span className="vc-numeric text-base font-bold text-[#159B79]">
                     +{row.total}
                   </span>
                 </div>
@@ -502,17 +502,17 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
       {/* Mock CSV Export Bar */}
       <GlassSurface className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
         <div className="flex items-start gap-3">
-          <FileSpreadsheet className="mt-0.5 h-5 w-5 text-teal-300 shrink-0" aria-hidden="true" />
+          <FileSpreadsheet className="mt-0.5 h-5 w-5 text-[#159B79] shrink-0" aria-hidden="true" />
           <div>
-            <h3 className="font-display text-lg font-semibold text-slate-50">
+            <h3 className="font-display text-lg font-bold text-[#123C35]">
               Mock CSV Report Exports
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[#414846]">
               Download filtered demo datasets directly as CSV spreadsheets from
               LocalStorage.
             </p>
             {exportNotice && (
-              <p role="status" className="mt-1.5 text-xs font-medium text-teal-300">
+              <p role="status" className="mt-1.5 text-xs font-semibold text-[#159B79]">
                 {exportNotice}
               </p>
             )}
@@ -523,7 +523,7 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
           <button
             type="button"
             onClick={handleExportDonations}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-100 hover:border-teal-400/50 hover:text-teal-200"
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#123C35]/20 bg-white px-3.5 py-2 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Donations CSV</span>
@@ -531,7 +531,7 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
           <button
             type="button"
             onClick={handleExportCampaigns}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-100 hover:border-amber-300/50 hover:text-amber-200"
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#123C35]/20 bg-white px-3.5 py-2 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Campaigns CSV</span>
@@ -539,7 +539,7 @@ export const AdminAnalyticsSection: React.FC<AdminAnalyticsSectionProps> = ({
           <button
             type="button"
             onClick={handleExportUsers}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-100 hover:border-sky-300/50 hover:text-sky-200"
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#123C35]/20 bg-white px-3.5 py-2 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Users CSV</span>

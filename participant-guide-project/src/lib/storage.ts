@@ -6,6 +6,7 @@ import {
   INITIAL_NOTIFICATIONS,
 } from '../data/mockCampaigns';
 import {
+  AdminAuditEntry,
   CampaignUpdate,
   CategoryItem,
   ContactMessage,
@@ -335,6 +336,7 @@ export function normalizeCampaigns(
       condition: item.condition || template?.condition || category,
       hospitalName: item.hospitalName || template?.hospitalName || 'Medical Center',
       location: item.location || template?.location || 'United States',
+      treatingDoctor: item.treatingDoctor ?? template?.treatingDoctor,
       organizerName: item.organizerName || template?.organizerName || 'Family Coordinator',
       organizerRelation: item.organizerRelation || template?.organizerRelation || 'Coordinator',
       summary,
@@ -352,6 +354,18 @@ export function normalizeCampaigns(
       donorCount,
       daysRemaining,
       verifiedBy: item.verifiedBy || template?.verifiedBy || 'VidaCare Clinical Review',
+      hospitalVerified:
+        typeof item.hospitalVerified === 'boolean'
+          ? item.hospitalVerified
+          : template?.hospitalVerified ??
+            (item.status === 'approved' || (!item.status && template?.status === 'approved')),
+      eligible80G:
+        typeof item.eligible80G === 'boolean'
+          ? item.eligible80G
+          : template?.eligible80G ??
+            (item.status === 'approved' || (!item.status && template?.status === 'approved')),
+      settlementPreference:
+        item.settlementPreference ?? template?.settlementPreference ?? 'Direct Hospital Billing',
       status:
         item.status === 'approved' || item.status === 'pending' || item.status === 'rejected'
           ? item.status
@@ -423,6 +437,12 @@ export function normalizeDonations(
       donorEmail: d.donorEmail ?? template?.donorEmail,
       isAnonymous,
       amount,
+      platformTipAmount:
+        typeof d.platformTipAmount === 'number' && Number.isFinite(d.platformTipAmount) && d.platformTipAmount >= 0
+          ? Math.round(d.platformTipAmount)
+          : template?.platformTipAmount ?? 0,
+      wants80GReceipt: Boolean(d.wants80GReceipt ?? template?.wants80GReceipt ?? false),
+      panNumber: typeof d.panNumber === 'string' ? d.panNumber.trim().toUpperCase() : template?.panNumber,
       paymentMethod: d.paymentMethod || template?.paymentMethod || 'UPI',
       paymentStatus: d.paymentStatus ?? template?.paymentStatus ?? 'Completed',
       timestamp: d.timestamp || template?.timestamp || new Date().toISOString(),
@@ -682,6 +702,7 @@ export function createDefaultStore(): VidaCareStore {
     notifications: INITIAL_NOTIFICATIONS.map((n) => ({ ...n })),
     categories: INITIAL_CATEGORIES.map((c) => ({ ...c })),
     contactMessages: INITIAL_CONTACT_MESSAGES.map((m) => ({ ...m })),
+    auditLogs: [],
     rememberedIdentifier: '',
   };
 }
@@ -725,6 +746,9 @@ export function normalizeStorePayload(rawParsed: unknown): VidaCareStore {
     notifications: normalizeNotifications(parsed.notifications, isLegacySchema),
     categories: normalizeCategories(parsed.categories),
     contactMessages: normalizeContactMessages(parsed.contactMessages, isLegacySchema),
+    auditLogs: Array.isArray(parsed.auditLogs)
+      ? (parsed.auditLogs as AdminAuditEntry[]).slice(0, 100)
+      : [],
     rememberedIdentifier:
       typeof parsed.rememberedIdentifier === 'string'
         ? parsed.rememberedIdentifier

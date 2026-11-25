@@ -71,7 +71,7 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-[#71807A] transition-colors hover:text-[#123C35]"
+        className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-[#414846] transition-colors hover:text-[#123C35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] rounded-lg"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
         <span>Back</span>
@@ -84,27 +84,27 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
         <h1 className="font-display text-3xl font-bold text-[#123C35]">
           {title}
         </h1>
-        <p className="text-sm leading-relaxed text-[#71807A]">
+        <p className="text-sm leading-relaxed text-[#414846]">
           {subtitle}{' '}
-          <span className="font-semibold text-[#202B29]">{destinationLabel}</span>
+          <span className="font-semibold text-[#131E1C]">{destinationLabel}</span>
         </p>
       </div>
 
       {/* Explicit Frontend Simulation Notice */}
-      <div className="rounded-xl border border-[#159B79]/30 bg-[#DDF3E9]/60 p-4 text-xs leading-relaxed">
+      <div className="rounded-xl border border-[#159B79]/30 bg-[#DDF3E9]/70 p-4 text-xs leading-relaxed">
         <div className="flex items-start gap-2.5">
           <ShieldAlert
-            className="mt-0.5 h-4 w-4 shrink-0 text-[#159B79]"
+            className="mt-0.5 h-4 w-4 shrink-0 text-[#123C35]"
             aria-hidden="true"
           />
           <div className="flex flex-1 flex-col gap-2 text-[#123C35]">
-            <p>
+            <p className="text-[#123C35]">
               <strong>Frontend Demo Simulation:</strong> No real SMS or email
               is sent. Enter simulated code{' '}
-              <span className="font-mono font-bold bg-[#DDF3E9] px-1.5 py-0.5 rounded text-[#123C35]">
+              <span className="vc-numeric rounded bg-white px-1.5 py-0.5 font-bold text-[#123C35]">
                 {simulatedCode}
               </span>{' '}
-              (or <span className="font-mono font-semibold">123456</span>).
+              (or <span className="vc-numeric font-semibold">123456</span>).
             </p>
             <div>
               <button
@@ -113,7 +113,7 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
                   setOtpInput(simulatedCode);
                   setError('');
                 }}
-                className="rounded-lg border border-[#159B79]/40 bg-white px-3 py-1 text-[11px] font-semibold text-[#123C35] hover:bg-[#DDF3E9] transition-colors"
+                className="rounded-[10px] border border-[#159B79]/40 bg-white px-3 py-1.5 text-[11px] font-semibold text-[#123C35] transition-colors hover:bg-[#DDF3E9]"
               >
                 Auto-fill {simulatedCode}
               </button>
@@ -124,7 +124,7 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="otp-code-input" className="text-xs font-semibold text-[#3D5450]">
+          <label htmlFor="otp-code-input" className="text-xs font-semibold text-[#131E1C]">
             6-Digit Verification Code
           </label>
           <input
@@ -138,12 +138,12 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
               if (error) setError('');
             }}
             placeholder="000000"
-            className="vc-input text-center font-mono text-xl tracking-[0.45em] min-h-[52px]"
+            className="vc-input vc-numeric min-h-[52px] text-center text-xl font-semibold tracking-[0.45em]"
           />
         </div>
 
         {error && (
-          <p role="alert" className="text-xs text-red-600 font-medium">
+          <p role="alert" className="text-xs text-red-700 font-medium">
             {error}
           </p>
         )}
@@ -160,7 +160,7 @@ export const OtpVerificationCard: React.FC<OtpVerificationCardProps> = ({
         </VidaButton>
       </form>
 
-      <div className="flex items-center justify-between border-t vc-hairline pt-4 text-xs text-[#71807A]">
+      <div className="flex items-center justify-between border-t vc-hairline pt-4 text-xs text-[#414846]">
         <span>Didn't see the simulated code?</span>
         <button
           type="button"

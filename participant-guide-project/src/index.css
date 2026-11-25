@@ -1,155 +1,180 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Manrope", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --font-sans: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --color-forest-950: #123C35;
   --color-emerald-600: #159B79;
   --color-offwhite-100: #F0FCF8;
+  --color-warm-white: #F8FAF7;
   --color-card-white: #FFFFFF;
   --color-mint-200: #DDF3E9;
-  --color-charcoal-900: #202B29;
-  --color-muted-600: #71807A;
+  --color-charcoal-900: #131E1C;
+  --color-muted-600: #414846;
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
     background-color: #F0FCF8;
-    color: #202B29;
+    color: #131E1C;
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     background-color: #F0FCF8;
-    color: #202B29;
+    color: #131E1C;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  h1,
-  h2,
-  h3,
-  .font-display {
+  :where(h1, h2, h3, h4, .font-display) {
     font-family: var(--font-display);
     text-wrap: balance;
     color: #123C35;
   }
 
-  p {
-    color: #3D5450;
-  }
-
-  label {
-    color: #3D5450;
+  :where(label) {
+    color: #131E1C;
   }
 }
 
-/* ========= VidaCare Light Healthcare Design System ========= */
+/* ========= VidaCare Institutional Healthcare Design System ========= */
 
-/* White card surface — used by all cards, modals, panels */
-.vc-glass {
-  background: #FFFFFF;
-  border: 1px solid rgba(18, 60, 53, 0.12);
-  box-shadow: 0 2px 16px -4px rgba(18, 60, 53, 0.08), 0 1px 4px rgba(18,60,53,0.04);
-}
+@layer components {
+  /* Crisp white card surface — 16px radius, restrained elevation */
+  .vc-glass {
+    background: #FFFFFF;
+    border: 1px solid rgba(18, 60, 53, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px -4px rgba(18, 60, 53, 0.06), 0 1px 3px rgba(18, 60, 53, 0.03);
+  }
 
-/* Mint-tinted subtle surface */
-.vc-glass-subtle {
-  background: rgba(221, 243, 233, 0.5);
-  border: 1px solid rgba(18, 60, 53, 0.1);
-}
+  /* Warm editorial panel — #F8FAF7 */
+  .vc-panel-warm {
+    background: #F8FAF7;
+    border: 1px solid rgba(18, 60, 53, 0.12);
+    border-radius: 16px;
+  }
 
-/* Forest hairline borders */
-.vc-hairline {
-  border-color: rgba(18, 60, 53, 0.12);
-}
+  /* Mint-tinted surface */
+  .vc-glass-subtle {
+    background: #DDF3E9;
+    border: 1px solid rgba(18, 60, 53, 0.12);
+    border-radius: 16px;
+  }
 
-/* Accent glow */
-.vc-glow-accent {
-  box-shadow:
-    0 0 36px -10px rgba(21, 155, 121, 0.2),
-    0 8px 24px -8px rgba(18, 60, 53, 0.1);
-}
+  /* Numeric alignment in Inter */
+  .vc-numeric {
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+  }
 
-/* ---- Form inputs: light theme standard ---- */
-.vc-input {
-  min-height: 44px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(18, 60, 53, 0.2);
-  background: #FFFFFF;
-  color: #202B29;
-  font-size: 0.875rem;
-  padding: 0 14px;
-  width: 100%;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
+  /* Forest hairline borders */
+  .vc-hairline {
+    border-color: rgba(18, 60, 53, 0.12);
+  }
 
-.vc-input::placeholder {
-  color: #9BAAA5;
-}
+  /* Subtle focal highlight for primary summary cards */
+  .vc-glow-accent {
+    box-shadow:
+      0 8px 28px -12px rgba(21, 155, 121, 0.18),
+      0 4px 16px -6px rgba(18, 60, 53, 0.08);
+  }
 
-.vc-input:focus {
-  outline: none;
-  border-color: #159B79;
-  box-shadow: 0 0 0 3px rgba(21, 155, 121, 0.12);
-}
+  /* ---- Form inputs: 10px-12px radius, legible contrast ---- */
+  .vc-input {
+    min-height: 44px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(18, 60, 53, 0.22);
+    background: #FFFFFF;
+    color: #131E1C;
+    font-size: 0.875rem;
+    padding: 0 14px;
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
 
-.vc-input:disabled {
-  background: #F0FCF8;
-  color: #9BAAA5;
-  cursor: not-allowed;
-}
+  .vc-input::placeholder {
+    color: rgba(65, 72, 70, 0.65);
+  }
 
-/* ---- Section band backgrounds ---- */
-.vc-section-mint {
-  background: #F0FCF8;
-}
+  .vc-input:focus {
+    outline: none;
+    border-color: #159B79;
+    box-shadow: 0 0 0 3px rgba(21, 155, 121, 0.16);
+  }
 
-.vc-section-white {
-  background: #FFFFFF;
-}
+  .vc-input:disabled {
+    background: #F8FAF7;
+    color: #414846;
+    opacity: 0.72;
+    cursor: not-allowed;
+  }
 
-.vc-section-forest {
-  background: #123C35;
-  color: #FFFFFF;
-}
+  /* ---- Section band backgrounds ---- */
+  .vc-section-mint {
+    background: #F0FCF8;
+  }
 
-/* ---- Badge chips ---- */
-.vc-badge-green {
-  background: #DDF3E9;
-  color: #123C35;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 100px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
+  .vc-section-warm {
+    background: #F8FAF7;
+  }
 
-.vc-badge-amber {
-  background: #FEF9EC;
-  color: #92400E;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 100px;
-}
+  .vc-section-white {
+    background: #FFFFFF;
+  }
 
-.vc-badge-red {
-  background: #FEF2F2;
-  color: #991B1B;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 100px;
+  .vc-section-forest {
+    background: #123C35;
+    color: #FFFFFF;
+  }
+
+  /* ---- Restrained Verification & Operational Status Indicators ---- */
+  .vc-badge-green {
+    background: #DDF3E9;
+    color: #123C35;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .vc-badge-amber {
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .vc-badge-red {
+    background: #FEE2E2;
+    color: #991B1B;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
 }
 
 @media print {
   body {
     background: #ffffff !important;
-    color: #202B29 !important;
+    color: #131E1C !important;
   }
   header,
   footer,

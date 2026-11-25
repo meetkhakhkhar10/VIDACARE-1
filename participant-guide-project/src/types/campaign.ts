@@ -58,6 +58,7 @@ export interface MedicalCampaign {
   category: MedicalCategory;
   hospitalName: string;
   location: string;
+  treatingDoctor?: string;
   organizerName: string;
   organizerRelation: string;
   summary: string;
@@ -69,6 +70,9 @@ export interface MedicalCampaign {
   donorCount: number;
   daysRemaining: number;
   verifiedBy: string;
+  hospitalVerified?: boolean;
+  eligible80G?: boolean;
+  settlementPreference?: 'Direct Hospital Billing' | 'Patient Reimbursement';
   status: CampaignStatus;
   rejectionReason?: string;
   featured: boolean;
@@ -78,7 +82,11 @@ export interface MedicalCampaign {
   documents?: MedicalDocument[];
 }
 
-export type PaymentMethodType = 'UPI' | 'Debit/Credit Card' | 'Net Banking';
+export type PaymentMethodType =
+  | 'UPI'
+  | 'Debit/Credit Card'
+  | 'Net Banking'
+  | 'International Card';
 
 export interface DonationRecord {
   id: string;
@@ -90,6 +98,9 @@ export interface DonationRecord {
   donorPhone?: string;
   isAnonymous?: boolean;
   amount: number;
+  platformTipAmount?: number;
+  wants80GReceipt?: boolean;
+  panNumber?: string;
   paymentMethod?: PaymentMethodType;
   paymentStatus?: 'Completed' | 'Pending' | 'Failed';
   transactionRef?: string;
@@ -139,6 +150,15 @@ export interface DashboardNotification {
   read: boolean;
 }
 
+export interface AdminAuditEntry {
+  id: string;
+  campaignId: string;
+  action: 'approved' | 'rejected' | 'resubmission_requested' | 'removed';
+  actor: string;
+  note: string;
+  timestamp: string;
+}
+
 export interface VidaCareStore {
   schemaVersion?: number;
   campaigns: MedicalCampaign[];
@@ -149,6 +169,6 @@ export interface VidaCareStore {
   notifications: DashboardNotification[];
   categories: CategoryItem[];
   contactMessages: ContactMessage[];
+  auditLogs?: AdminAuditEntry[];
   rememberedIdentifier?: string;
 }
-

@@ -14,22 +14,22 @@ const NAV_LINKS = [
 ];
 
 export const Navbar: React.FC = () => {
-  const { user } = useVidaCare();
+  const { user, getDashboardPathForRole } = useVidaCare();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const dashboardTarget = user?.role === 'Admin' ? '/admin' : '/dashboard';
+  const dashboardTarget = user ? getDashboardPathForRole(user.role) : '/login';
 
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname, location.hash]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#123C35]/10 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-18 max-w-[1200px] items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-[#123C35]/10 bg-[#F8FAF7]/95 backdrop-blur-md">
+      <div className="mx-auto flex h-[72px] max-w-[1200px] items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         {/* Zone 1: VidaCare Brand Logo */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-[#123C35] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085] rounded-md"
+          className="inline-flex items-center gap-2.5 rounded-xl font-display text-xl font-bold tracking-tight text-[#123C35] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79]"
         >
           <BrandMark className="h-7 w-7 shrink-0" />
           <span>VidaCare</span>
@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
         {/* Zone 2: Navigation Links */}
         <nav
           aria-label="Primary navigation"
-          className="hidden lg:flex items-center gap-6"
+          className="hidden items-center gap-6 lg:flex"
         >
           {NAV_LINKS.map((item) => {
             if (item.isHash) {
@@ -48,16 +48,16 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`relative py-1 text-sm font-medium whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085] rounded ${
+                  className={`relative rounded py-1 text-sm whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
                     isHashActive
-                      ? 'text-[#123C35] font-semibold'
-                      : 'text-[#71807A] hover:text-[#123C35]'
+                      ? 'font-semibold text-[#123C35]'
+                      : 'font-medium text-[#414846] hover:text-[#123C35]'
                   }`}
                 >
                   <span>{item.label}</span>
                   <span
                     aria-hidden="true"
-                    className={`absolute inset-x-0 -bottom-0.5 h-0.5 bg-[#16A085] transition-opacity duration-150 rounded-full ${
+                    className={`absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[#159B79] transition-opacity duration-150 ${
                       isHashActive ? 'opacity-100' : 'opacity-0'
                     }`}
                   />
@@ -75,8 +75,8 @@ export const Navbar: React.FC = () => {
                     item.to === '/'
                       ? isActive && location.hash !== '#how-it-works'
                       : isActive;
-                  return `relative py-1 text-sm font-medium whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085] rounded ${
-                    active ? 'text-[#123C35] font-semibold' : 'text-[#71807A] hover:text-[#123C35]'
+                  return `relative rounded py-1 text-sm whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
+                    active ? 'font-semibold text-[#123C35]' : 'font-medium text-[#414846] hover:text-[#123C35]'
                   }`;
                 }}
               >
@@ -90,7 +90,7 @@ export const Navbar: React.FC = () => {
                       <span>{item.label}</span>
                       <span
                         aria-hidden="true"
-                        className={`absolute inset-x-0 -bottom-0.5 h-0.5 bg-[#16A085] transition-opacity duration-150 rounded-full ${
+                        className={`absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[#159B79] transition-opacity duration-150 ${
                           active ? 'opacity-100' : 'opacity-0'
                         }`}
                       />
@@ -103,45 +103,51 @@ export const Navbar: React.FC = () => {
 
           <NavLink
             to={user ? dashboardTarget : '/login'}
-            className={({ isActive }) =>
-              `relative py-1 text-sm font-medium whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085] rounded ${
-                isActive ? 'text-[#123C35] font-semibold' : 'text-[#71807A] hover:text-[#123C35]'
-              }`
-            }
+            className={({ isActive }) => {
+              const isDashActive =
+                isActive || (user && location.pathname.startsWith('/dashboard'));
+              return `relative rounded py-1 text-sm whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] ${
+                isDashActive ? 'font-semibold text-[#123C35]' : 'font-medium text-[#414846] hover:text-[#123C35]'
+              }`;
+            }}
           >
-            {({ isActive }) => (
-              <>
-                <span>
-                  {user
-                    ? user.role === 'Admin'
-                      ? 'Admin'
-                      : 'Dashboard'
-                    : 'Login'}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={`absolute inset-x-0 -bottom-0.5 h-0.5 bg-[#16A085] transition-opacity duration-150 rounded-full ${
-                    isActive ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              </>
-            )}
+            {({ isActive }) => {
+              const isDashActive =
+                isActive || (user && location.pathname.startsWith('/dashboard'));
+              return (
+                <>
+                  <span>
+                    {user
+                      ? user.role === 'Admin'
+                        ? 'Admin'
+                        : 'Dashboard'
+                      : 'Login'}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-[#159B79] transition-opacity duration-150 ${
+                      isDashActive ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                </>
+              );
+            }}
           </NavLink>
         </nav>
 
         {/* Zone 3: Single Primary Action + Mobile Menu Trigger */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex shrink-0 items-center gap-3">
           <div className="hidden lg:block">
             <VidaButton
-              to={user ? dashboardTarget : '/signup'}
+              to={user ? dashboardTarget : '/start-fundraiser'}
               variant="primary"
               className="min-h-[40px] px-4 py-2 text-xs font-semibold"
             >
               {user
                 ? user.role === 'Admin'
-                  ? 'Admin Portal'
-                  : 'My Account'
-                : 'Get Started'}
+                  ? 'Clinical Console'
+                  : 'My Portal'
+                : 'Start a Fundraiser'}
             </VidaButton>
           </div>
 
@@ -151,7 +157,7 @@ export const Navbar: React.FC = () => {
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav-drawer"
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F7F8F5] text-[#123C35] transition-colors hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085] lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#123C35]/20 bg-white text-[#123C35] transition-colors hover:bg-[#DDF3E9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#159B79] lg:hidden"
           >
             {mobileOpen ? (
               <X className="h-5 w-5" aria-hidden="true" />
@@ -166,21 +172,21 @@ export const Navbar: React.FC = () => {
       {mobileOpen && (
         <div
           id="mobile-nav-drawer"
-          className="border-t border-[#123C35]/10 bg-white px-4 py-5 shadow-lg backdrop-blur-xl lg:hidden"
+          className="border-t border-[#123C35]/10 bg-white px-4 py-5 shadow-lg lg:hidden"
         >
           <nav aria-label="Mobile navigation" className="flex flex-col gap-1.5">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="flex min-h-[44px] items-center rounded-xl px-3 text-sm font-medium text-[#202B29] transition-colors hover:bg-[#DDF3E9]/50 hover:text-[#123C35]"
+                className="flex min-h-[44px] items-center rounded-xl px-3 text-sm font-medium text-[#131E1C] transition-colors hover:bg-[#DDF3E9] hover:text-[#123C35]"
               >
                 {item.label}
               </Link>
             ))}
             <Link
               to={user ? dashboardTarget : '/login'}
-              className="flex min-h-[44px] items-center rounded-xl px-3 text-sm font-medium text-[#202B29] transition-colors hover:bg-[#DDF3E9]/50 hover:text-[#123C35]"
+              className="flex min-h-[44px] items-center rounded-xl px-3 text-sm font-medium text-[#131E1C] transition-colors hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               {user
                 ? user.role === 'Admin'
@@ -192,15 +198,15 @@ export const Navbar: React.FC = () => {
 
           <div className="mt-4 flex flex-col gap-2 border-t border-[#123C35]/10 pt-4">
             <VidaButton
-              to={user ? dashboardTarget : '/signup'}
+              to={user ? dashboardTarget : '/start-fundraiser'}
               variant="primary"
               className="w-full"
             >
               {user
                 ? user.role === 'Admin'
-                  ? 'Go to Admin Portal'
-                  : 'Go to Dashboard'
-                : 'Get Started'}
+                  ? 'Go to Clinical Console'
+                  : 'Go to My Portal'
+                : 'Start a Fundraiser'}
             </VidaButton>
           </div>
         </div>

@@ -418,19 +418,19 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="create-fundraiser-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={handleCancelClose}
     >
       <GlassSurface className="max-h-[90vh] w-full max-w-2xl overflow-y-auto p-6 sm:p-8">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4 border-b vc-hairline pb-4">
             <div>
-              <p className="text-xs font-medium tracking-[0.14em] text-amber-300">
+              <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                 New Medical Fundraiser
               </p>
               <h2
                 id="create-fundraiser-title"
-                className="mt-1 font-display text-2xl font-semibold text-slate-50"
+                className="mt-1 font-display text-2xl font-bold text-[#123C35]"
               >
                 Create a Care Campaign
               </h2>
@@ -439,7 +439,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
               type="button"
               onClick={handleCancelClose}
               aria-label="Close create fundraiser dialog"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -448,7 +448,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label htmlFor="cf-title" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-title" className="text-xs font-semibold text-[#131E1C]">
                   Campaign Title *
                 </label>
                 <input
@@ -457,12 +457,12 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Surgical Care & Recovery Fund for..."
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-patient" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-patient" className="text-xs font-semibold text-[#131E1C]">
                   Patient Full Name *
                 </label>
                 <input
@@ -471,12 +471,12 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={patientName}
                   onChange={(e) => setPatientName(e.target.value)}
                   placeholder="Patient name"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-age" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-age" className="text-xs font-semibold text-[#131E1C]">
                   Patient Age
                 </label>
                 <input
@@ -485,19 +485,19 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={ageLabel}
                   onChange={(e) => setAgeLabel(e.target.value)}
                   placeholder="e.g., Age 34"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-category" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-category" className="text-xs font-semibold text-[#131E1C]">
                   Medical Category *
                 </label>
                 <select
                   id="cf-category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value as MedicalCategory)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 >
                   {activeCategories.map((cat) => (
                     <option key={cat.id} value={cat.name}>
@@ -508,7 +508,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-condition" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-condition" className="text-xs font-semibold text-[#131E1C]">
                   Medical Condition *
                 </label>
                 <input
@@ -517,12 +517,12 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={condition}
                   onChange={(e) => setCondition(e.target.value)}
                   placeholder="Diagnosis or procedure"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-hospital" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-hospital" className="text-xs font-semibold text-[#131E1C]">
                   Hospital Name *
                 </label>
                 <input
@@ -531,12 +531,12 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={hospitalName}
                   onChange={(e) => setHospitalName(e.target.value)}
                   placeholder="Accredited medical center"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="cf-location" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-location" className="text-xs font-semibold text-[#131E1C]">
                   City / Location *
                 </label>
                 <input
@@ -545,18 +545,18 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g., Boston, MA"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label htmlFor="cf-goal" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-goal" className="text-xs font-semibold text-[#131E1C]">
                   Fundraising Goal (₹) *
                 </label>
                 <div className="relative">
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 font-mono text-sm text-amber-300"
+                    className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 vc-numeric text-sm font-semibold text-[#159B79]"
                   >
                     ₹
                   </span>
@@ -566,13 +566,13 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                     min={1000}
                     value={goalAmount}
                     onChange={(e) => setGoalAmount(e.target.value)}
-                    className="min-h-[42px] w-full rounded-lg border border-slate-800 bg-slate-950/75 pr-3.5 pl-8 font-mono text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                    className="vc-input pl-8 vc-numeric"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label htmlFor="cf-summary" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-summary" className="text-xs font-semibold text-[#131E1C]">
                   Patient Story &amp; Need Summary *
                 </label>
                 <textarea
@@ -581,12 +581,12 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   placeholder="Explain the patient's care journey and how funds help..."
-                  className="rounded-lg border border-slate-800 bg-slate-950/75 p-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input min-h-[96px] py-3"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label htmlFor="cf-treatment" className="text-xs font-medium text-slate-300">
+                <label htmlFor="cf-treatment" className="text-xs font-semibold text-[#131E1C]">
                   Planned Clinical Treatment (Optional)
                 </label>
                 <input
@@ -595,33 +595,33 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                   value={treatmentDetails}
                   onChange={(e) => setTreatmentDetails(e.target.value)}
                   placeholder="Surgery, inpatient recovery, or medication details"
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               {/* Patient Photo Upload (Temporary Browser Preview) */}
-              <div className="flex flex-col gap-2.5 rounded-xl border border-slate-800/90 bg-slate-950/60 p-4 sm:col-span-2">
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-[#123C35]/14 bg-[#F0FCF8] p-4 sm:col-span-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <label
                       htmlFor="cf-patient-photo"
-                      className="text-xs font-medium text-slate-200"
+                      className="text-xs font-semibold text-[#123C35]"
                     >
                       Patient Photo (Optional)
                     </label>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-[#414846]">
                       JPG, PNG, or WEBP up to 5 MB. Uses temporary browser preview only.
                     </p>
                   </div>
                   <span
-                    className={`text-[11px] font-medium ${
+                    className={`text-[11px] font-semibold ${
                       photoStatus === 'ready'
-                        ? 'text-teal-300'
+                        ? 'text-[#159B79]'
                         : photoStatus === 'error'
-                        ? 'text-rose-300'
+                        ? 'text-red-700'
                         : photoStatus === 'preparing'
-                        ? 'text-amber-300'
-                        : 'text-slate-400'
+                        ? 'text-amber-800'
+                        : 'text-[#414846]'
                     }`}
                   >
                     {photoStatus === 'preparing' && (
@@ -639,9 +639,9 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                 {!photoPreview ? (
                   <label
                     htmlFor="cf-patient-photo"
-                    className="flex cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-dashed border-slate-700 bg-slate-900/60 px-4 py-4 text-xs font-medium text-slate-300 transition-colors hover:border-amber-300/50 hover:text-amber-200"
+                    className="flex cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-dashed border-[#123C35]/25 bg-white px-4 py-4 text-xs font-semibold text-[#123C35] transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9]/50"
                   >
-                    <ImagePlus className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                    <ImagePlus className="h-4 w-4 text-[#159B79]" aria-hidden="true" />
                     <span>Select Patient Photo (JPG, PNG, WEBP)</span>
                     <input
                       ref={photoInputRef}
@@ -653,24 +653,24 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                     />
                   </label>
                 ) : (
-                  <div className="flex flex-col gap-3 rounded-lg border border-slate-800 bg-slate-900/75 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-3 rounded-xl border border-[#123C35]/14 bg-white p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3 min-w-0">
                       <img
                         src={photoPreview.url}
                         alt={`Temporary preview of ${photoPreview.fileName}`}
-                        className="h-16 w-20 shrink-0 rounded-lg border border-white/10 object-cover"
+                        className="h-16 w-20 shrink-0 rounded-xl border border-[#123C35]/15 object-cover"
                       />
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-medium text-slate-100">
+                        <p className="truncate text-xs font-semibold text-[#131E1C]">
                           {photoPreview.fileName}
                         </p>
-                        <p className="mt-0.5 font-mono text-[11px] text-slate-400">
+                        <p className="mt-0.5 font-mono text-[11px] text-[#414846]">
                           {photoPreview.fileSize} · Temporary preview (not stored in LocalStorage)
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <label className="inline-flex min-h-[34px] cursor-pointer items-center rounded-lg border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-medium text-slate-200 hover:border-sky-300/50">
+                      <label className="inline-flex min-h-[36px] cursor-pointer items-center rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-3 py-1 text-xs font-semibold text-[#123C35] hover:bg-[#DDF3E9]">
                         <span>Replace</span>
                         <input
                           ref={photoInputRef}
@@ -685,7 +685,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                         type="button"
                         onClick={handleRemovePhoto}
                         aria-label="Remove patient photo"
-                        className="inline-flex min-h-[34px] items-center gap-1 rounded-lg border border-rose-400/35 bg-rose-950/30 px-3 py-1 text-xs font-medium text-rose-200 hover:bg-rose-950/60"
+                        className="inline-flex min-h-[36px] items-center gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
                       >
                         <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                         <span>Remove</span>
@@ -695,33 +695,33 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                 )}
 
                 {photoError && (
-                  <p role="alert" className="text-xs text-rose-300">
+                  <p role="alert" className="text-xs font-medium text-red-700">
                     {photoError}
                   </p>
                 )}
               </div>
 
               {/* Medical Documents Upload (Images & PDFs, Temporary Previews) */}
-              <div className="flex flex-col gap-3 rounded-xl border border-slate-800/90 bg-slate-950/60 p-4 sm:col-span-2">
+              <div className="flex flex-col gap-3 rounded-2xl border border-[#123C35]/14 bg-[#F0FCF8] p-4 sm:col-span-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <label
                       htmlFor="cf-medical-docs"
-                      className="text-xs font-medium text-slate-200"
+                      className="text-xs font-semibold text-[#123C35]"
                     >
                       Medical Documents &amp; Estimates (Optional · Max {MAX_DOCUMENT_FILES})
                     </label>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-[#414846]">
                       PDF, JPG, PNG, or WEBP up to 5 MB each. Previews stay in memory only.
                     </p>
                   </div>
                   <span
-                    className={`font-mono text-[11px] ${
+                    className={`font-mono text-[11px] font-semibold ${
                       docStatus === 'error'
-                        ? 'text-rose-300'
+                        ? 'text-red-700'
                         : uploadedDocs.length > 0
-                        ? 'text-teal-300'
-                        : 'text-slate-400'
+                        ? 'text-[#159B79]'
+                        : 'text-[#414846]'
                     }`}
                   >
                     {uploadedDocs.length}/{MAX_DOCUMENT_FILES} attached
@@ -731,9 +731,9 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                 {uploadedDocs.length < MAX_DOCUMENT_FILES && (
                   <label
                     htmlFor="cf-medical-docs"
-                    className="flex cursor-pointer items-center justify-center gap-2.5 rounded-lg border border-dashed border-slate-700 bg-slate-900/60 px-4 py-3.5 text-xs font-medium text-slate-300 transition-colors hover:border-sky-300/50 hover:text-sky-200"
+                    className="flex cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-dashed border-[#123C35]/25 bg-white px-4 py-3.5 text-xs font-semibold text-[#123C35] transition-colors hover:border-[#159B79] hover:bg-[#DDF3E9]/50"
                   >
-                    <Upload className="h-4 w-4 text-sky-300" aria-hidden="true" />
+                    <Upload className="h-4 w-4 text-[#159B79]" aria-hidden="true" />
                     <span>Attach Hospital Estimate or Diagnostic Report (PDF / Image)</span>
                     <input
                       ref={docsInputRef}
@@ -748,7 +748,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                 )}
 
                 {docError && (
-                  <p role="alert" className="text-xs text-rose-300">
+                  <p role="alert" className="text-xs font-medium text-red-700">
                     {docError}
                   </p>
                 )}
@@ -761,7 +761,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                       return (
                         <div
                           key={doc.id}
-                          className="flex flex-col gap-2.5 rounded-lg border border-slate-800 bg-slate-900/75 p-3"
+                          className="flex flex-col gap-2.5 rounded-xl border border-[#123C35]/14 bg-white p-3"
                         >
                           <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex items-center gap-3 min-w-0">
@@ -769,23 +769,23 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                                 <img
                                   src={doc.previewUrl}
                                   alt={doc.title}
-                                  className="h-11 w-11 shrink-0 rounded border border-white/10 object-cover"
+                                  className="h-11 w-11 shrink-0 rounded-lg border border-[#123C35]/15 object-cover"
                                 />
                               ) : (
-                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded border border-sky-400/25 bg-sky-400/10 text-sky-300">
+                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#159B79]/25 bg-[#DDF3E9] text-[#123C35]">
                                   <FileText className="h-5 w-5" aria-hidden="true" />
                                 </div>
                               )}
                               <div className="min-w-0">
-                                <p className="truncate text-xs font-medium text-slate-100">
+                                <p className="truncate text-xs font-semibold text-[#131E1C]">
                                   {doc.fileName || doc.title}
                                 </p>
-                                <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400">
+                                <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-[#414846]">
                                   <span>{isPdf ? 'PDF' : 'Image'}</span>
                                   <span aria-hidden="true">·</span>
                                   <span className="font-mono">{doc.fileSize}</span>
                                   <span aria-hidden="true">·</span>
-                                  <span className="inline-flex items-center gap-1 text-teal-300">
+                                  <span className="inline-flex items-center gap-1 font-medium text-[#159B79]">
                                     <FileCheck2 className="h-3 w-3" aria-hidden="true" />
                                     Temporary preview
                                   </span>
@@ -803,7 +803,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                                     e.target.value as MedicalDocument['docType']
                                   )
                                 }
-                                className="min-h-[32px] rounded-md border border-slate-700 bg-slate-950 px-2 text-[11px] text-slate-200 focus:border-amber-300/60 focus:outline-none"
+                                className="min-h-[34px] rounded-xl border border-[#123C35]/20 bg-[#F0FCF8] px-2.5 text-[11px] font-medium text-[#131E1C] focus:border-[#159B79] focus:outline-none"
                               >
                                 <option value="Treatment Estimate">Treatment Estimate</option>
                                 <option value="Diagnostic Report">Diagnostic Report</option>
@@ -814,7 +814,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                                 onClick={() =>
                                   setActivePreviewDocId(isPreviewActive ? null : doc.id)
                                 }
-                                className="inline-flex min-h-[32px] items-center gap-1 rounded-md border border-sky-400/35 bg-sky-400/10 px-2.5 text-[11px] font-medium text-sky-200 hover:bg-sky-400/20"
+                                className="inline-flex min-h-[34px] items-center gap-1 rounded-xl border border-[#123C35]/20 bg-[#DDF3E9]/70 px-2.5 text-[11px] font-semibold text-[#123C35] hover:bg-[#DDF3E9]"
                               >
                                 <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>{isPreviewActive ? 'Hide' : 'Preview'}</span>
@@ -823,7 +823,7 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                                 type="button"
                                 onClick={() => handleRemoveDoc(doc.id)}
                                 aria-label={`Remove ${doc.fileName || doc.title}`}
-                                className="inline-flex min-h-[32px] items-center gap-1 rounded-md border border-rose-400/35 bg-rose-950/30 px-2.5 text-[11px] font-medium text-rose-200 hover:bg-rose-950/60"
+                                className="inline-flex min-h-[34px] items-center gap-1 rounded-xl border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 hover:bg-red-100"
                               >
                                 <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>Remove</span>
@@ -835,15 +835,15 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                     })}
 
                     {activePreviewDoc && activePreviewDoc.previewUrl && (
-                      <div className="rounded-lg border border-sky-300/25 bg-slate-950/90 p-3">
+                      <div className="rounded-xl border border-[#123C35]/15 bg-white p-3">
                         <div className="mb-2 flex items-center justify-between gap-2 text-xs">
-                          <span className="truncate font-medium text-sky-200">
+                          <span className="truncate font-semibold text-[#123C35]">
                             Previewing: {activePreviewDoc.fileName || activePreviewDoc.title}
                           </span>
                           <button
                             type="button"
                             onClick={() => setActivePreviewDocId(null)}
-                            className="text-slate-400 hover:text-white"
+                            className="font-medium text-[#414846] hover:text-[#123C35]"
                           >
                             Close preview
                           </button>
@@ -852,13 +852,13 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
                           <iframe
                             title={activePreviewDoc.fileName || activePreviewDoc.title}
                             src={activePreviewDoc.previewUrl}
-                            className="h-64 w-full rounded-md border border-slate-800 bg-white"
+                            className="h-64 w-full rounded-xl border border-[#123C35]/15 bg-white"
                           />
                         ) : (
                           <img
                             src={activePreviewDoc.previewUrl}
                             alt={activePreviewDoc.fileName || activePreviewDoc.title}
-                            className="max-h-64 w-full rounded-md object-contain bg-slate-900"
+                            className="max-h-64 w-full rounded-xl object-contain bg-[#F0FCF8]"
                           />
                         )}
                       </div>
@@ -869,13 +869,13 @@ export const CreateFundraiserModal: React.FC<CreateFundraiserModalProps> = ({
             </div>
 
             {error && (
-              <p role="alert" className="text-xs text-rose-300">
+              <p role="alert" className="text-xs font-medium text-red-700">
                 {error}
               </p>
             )}
 
-            <p className="text-xs text-slate-400">
-              New campaigns enter <strong>Pending</strong> status until approved
+            <p className="text-xs text-[#414846]">
+              New campaigns enter <strong className="text-[#123C35]">Pending</strong> status until approved
               in review before appearing in public listings. Large uploaded files
               stay in temporary browser memory for preview and are not stored in
               LocalStorage.
@@ -1006,19 +1006,19 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-campaign-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <GlassSurface className="max-h-[90vh] w-full max-w-xl overflow-y-auto p-6 sm:p-8">
         <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4 border-b vc-hairline pb-4">
             <div>
-              <p className="text-xs font-medium tracking-[0.14em] text-sky-300">
+              <p className="text-xs font-semibold tracking-[0.14em] text-[#159B79] uppercase">
                 Edit Campaign
               </p>
               <h2
                 id="edit-campaign-title"
-                className="mt-1 font-display text-2xl font-semibold text-slate-50"
+                className="mt-1 font-display text-2xl font-bold text-[#123C35]"
               >
                 Update {campaign.patientName}’s Fundraiser
               </h2>
@@ -1027,7 +1027,7 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
               type="button"
               onClick={onClose}
               aria-label="Close edit campaign dialog"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#123C35]/15 bg-[#F0FCF8] text-[#414846] hover:bg-[#DDF3E9] hover:text-[#123C35]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -1035,7 +1035,7 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="ec-title" className="text-xs font-medium text-slate-300">
+              <label htmlFor="ec-title" className="text-xs font-semibold text-[#131E1C]">
                 Campaign Title
               </label>
               <input
@@ -1043,20 +1043,20 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                className="vc-input"
               />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="ec-category" className="text-xs font-medium text-slate-300">
+                <label htmlFor="ec-category" className="text-xs font-semibold text-[#131E1C]">
                   Medical Category
                 </label>
                 <select
                   id="ec-category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value as MedicalCategory)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 >
                   {categoryChoices.map((cat) => (
                     <option key={cat.id} value={cat.name}>
@@ -1067,7 +1067,7 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="ec-condition" className="text-xs font-medium text-slate-300">
+                <label htmlFor="ec-condition" className="text-xs font-semibold text-[#131E1C]">
                   Medical Condition
                 </label>
                 <input
@@ -1075,12 +1075,12 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                   type="text"
                   value={condition}
                   onChange={(e) => setCondition(e.target.value)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="ec-goal" className="text-xs font-medium text-slate-300">
+                <label htmlFor="ec-goal" className="text-xs font-semibold text-[#131E1C]">
                   Target Goal (₹)
                 </label>
                 <input
@@ -1089,12 +1089,12 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                   min={1000}
                   value={goalAmount}
                   onChange={(e) => setGoalAmount(e.target.value)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 font-mono text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input vc-numeric"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="ec-hospital" className="text-xs font-medium text-slate-300">
+                <label htmlFor="ec-hospital" className="text-xs font-semibold text-[#131E1C]">
                   Hospital Name
                 </label>
                 <input
@@ -1102,12 +1102,12 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                   type="text"
                   value={hospitalName}
                   onChange={(e) => setHospitalName(e.target.value)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="ec-location" className="text-xs font-medium text-slate-300">
+                <label htmlFor="ec-location" className="text-xs font-semibold text-[#131E1C]">
                   Location
                 </label>
                 <input
@@ -1115,13 +1115,13 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="min-h-[42px] rounded-lg border border-slate-800 bg-slate-950/75 px-3.5 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                  className="vc-input"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="ec-summary" className="text-xs font-medium text-slate-300">
+              <label htmlFor="ec-summary" className="text-xs font-semibold text-[#131E1C]">
                 Campaign Summary
               </label>
               <textarea
@@ -1129,12 +1129,12 @@ export const EditCampaignModal: React.FC<EditCampaignModalProps> = ({
                 rows={3}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
-                className="rounded-lg border border-slate-800 bg-slate-950/75 p-3 text-sm text-slate-100 focus:border-amber-300/60 focus:outline-none"
+                className="vc-input min-h-[96px] py-3"
               />
             </div>
 
             {error && (
-              <p role="alert" className="text-xs text-rose-300">
+              <p role="alert" className="text-xs font-medium text-red-700">
                 {error}
               </p>
             )}
@@ -1181,7 +1181,7 @@ export const DonationReceiptModal: React.FC<DonationReceiptModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="receipt-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#020611]/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#123C35]/45 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -1192,7 +1192,7 @@ export const DonationReceiptModal: React.FC<DonationReceiptModalProps> = ({
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex min-h-[38px] items-center gap-2 rounded-lg bg-teal-400 px-4 py-1.5 text-xs font-semibold text-slate-950 hover:bg-teal-300"
+            className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[#123C35] px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#159B79]"
           >
             <Printer className="h-4 w-4" aria-hidden="true" />
             <span>Print Receipt</span>
@@ -1201,31 +1201,31 @@ export const DonationReceiptModal: React.FC<DonationReceiptModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close receipt modal"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-200 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#123C35]/20 bg-white text-[#123C35] shadow-sm hover:bg-[#DDF3E9]"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="rounded-2xl border border-slate-700 bg-white p-8 text-slate-900 shadow-2xl">
-          <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center">
+        <div className="rounded-2xl border border-[#123C35]/15 bg-white p-8 text-[#131E1C] shadow-2xl">
+          <div className="flex flex-col justify-between gap-4 border-b border-[#123C35]/12 pb-5 sm:flex-row sm:items-center">
             <div className="flex items-center gap-2.5">
               <BrandMark className="h-7 w-7" />
               <div>
                 <h2
                   id="receipt-modal-title"
-                  className="font-display text-xl font-bold text-slate-950"
+                  className="font-display text-xl font-bold text-[#123C35]"
                 >
                   VidaCare
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#414846]">
                   Contribution Receipt (Demo Preview)
                 </p>
               </div>
             </div>
             <div className="sm:text-right">
-              <p className="text-xs text-slate-500">Reference</p>
-              <p className="font-mono text-xs font-semibold text-slate-900">
+              <p className="text-xs text-[#414846]">Reference</p>
+              <p className="font-mono text-xs font-semibold text-[#131E1C]">
                 {donation.transactionRef || donation.id.toUpperCase()}
               </p>
             </div>
@@ -1233,20 +1233,20 @@ export const DonationReceiptModal: React.FC<DonationReceiptModalProps> = ({
 
           <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2">
             <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase">
+              <p className="text-xs font-semibold text-[#414846] uppercase">
                 Supporter
               </p>
-              <p className="mt-1 font-semibold text-slate-900">{user.fullName}</p>
-              <p className="text-xs text-slate-600">{user.email}</p>
+              <p className="mt-1 font-semibold text-[#131E1C]">{user.fullName}</p>
+              <p className="text-xs text-[#414846]">{user.email}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase">
+              <p className="text-xs font-semibold text-[#414846] uppercase">
                 Campaign Supported
               </p>
-              <p className="mt-1 font-semibold text-slate-900">
+              <p className="mt-1 font-semibold text-[#131E1C]">
                 {donation.campaignTitle}
               </p>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-[#414846]">
                 {donation.isAnonymous
                   ? 'Displayed publicly as Anonymous Donor'
                   : 'Public donor listing'}
@@ -1254,33 +1254,59 @@ export const DonationReceiptModal: React.FC<DonationReceiptModalProps> = ({
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
-            <div className="flex justify-between py-1 text-slate-600">
+          <div className="mt-6 rounded-xl border border-[#123C35]/12 bg-[#F8FAF7] p-4 text-sm">
+            <div className="flex justify-between py-1 text-[#414846]">
               <span>Date</span>
-              <span className="font-mono text-xs tabular-nums">
-                {new Date(donation.timestamp).toLocaleDateString()}
+              <span className="vc-numeric text-xs text-[#131E1C]">
+                {new Date(donation.timestamp).toLocaleDateString('en-IN', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })}
               </span>
             </div>
-            <div className="flex justify-between py-1 text-slate-600">
+            <div className="flex justify-between py-1 text-[#414846]">
               <span>Payment Method</span>
-              <span>{donation.paymentMethod || 'UPI'}</span>
+              <span className="font-medium text-[#131E1C]">{donation.paymentMethod || 'UPI'}</span>
             </div>
-            <div className="flex justify-between py-1 text-slate-600">
+            <div className="flex justify-between py-1 text-[#414846]">
               <span>Status</span>
-              <span className="font-medium text-emerald-700">
+              <span className="font-semibold text-[#159B79]">
                 {donation.paymentStatus || 'Completed'}
               </span>
             </div>
-            <div className="mt-2 flex justify-between border-t border-slate-200 pt-2.5 font-bold text-slate-950">
-              <span>Total Contributed</span>
-              <span className="font-mono tabular-nums">
+            <div className="flex justify-between py-1 text-[#414846]">
+              <span>Campaign Contribution</span>
+              <span className="vc-numeric font-medium text-[#131E1C]">
                 {formatINR(donation.amount)}
+              </span>
+            </div>
+            {Boolean(donation.platformTipAmount && donation.platformTipAmount > 0) && (
+              <div className="flex justify-between py-1 text-[#414846]">
+                <span>Voluntary Platform Tip</span>
+                <span className="vc-numeric font-medium text-[#131E1C]">
+                  {formatINR(donation.platformTipAmount || 0)}
+                </span>
+              </div>
+            )}
+            {donation.wants80GReceipt && (
+              <div className="flex justify-between py-1 text-[#414846]">
+                <span>80G Tax Summary</span>
+                <span className="vc-numeric text-xs font-medium text-[#123C35]">
+                  Requested{donation.panNumber ? ` · PAN ${donation.panNumber}` : ''}
+                </span>
+              </div>
+            )}
+            <div className="mt-2 flex justify-between border-t border-[#123C35]/12 pt-2.5 font-bold text-[#123C35]">
+              <span>Total Paid (Simulation)</span>
+              <span className="vc-numeric">
+                {formatINR(donation.amount + (donation.platformTipAmount || 0))}
               </span>
             </div>
           </div>
 
           {donation.message && (
-            <p className="mt-4 text-xs italic text-slate-600">
+            <p className="mt-4 text-xs italic text-[#414846]">
               “{donation.message}”
             </p>
           )}

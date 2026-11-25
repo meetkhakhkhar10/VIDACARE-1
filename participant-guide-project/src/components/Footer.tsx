@@ -8,41 +8,40 @@ export const Footer: React.FC = () => {
     <footer className="relative z-10 border-t border-[#123C35]/15 bg-[#123C35] text-white">
       <div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-12">
-          {/* Brand Summary & Social Icons */}
+          {/* Brand Summary & Links */}
           <div className="flex flex-col gap-4 md:col-span-5">
             <Link
               to="/"
               className="inline-flex w-fit items-center gap-2.5 font-display text-xl font-bold tracking-tight text-white"
             >
-              <BrandMark className="h-7 w-7" />
+              <BrandMark className="h-7 w-7" inverted />
               <span>VidaCare</span>
             </Link>
-            <p className="max-w-sm text-sm leading-relaxed text-[#DDF3E9]/85">
-              Together, We Make Healing Possible. Verified medical crowdfunding
-              connecting patients and families with compassionate donors around
-              the world.
+            <p className="max-w-sm text-sm leading-relaxed text-[#DDF3E9]/90">
+              Together, We Make Healing Possible. Institutional-grade medical
+              crowdfunding built around clinical verification and transparent
+              patient support.
             </p>
 
-            {/* Social Icons */}
             <div className="flex items-center gap-3 pt-1">
               <Link
                 to="/about"
-                aria-label="VidaCare Global Community"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:border-[#16A085] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085]"
+                aria-label="VidaCare Care Standards"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white transition-colors hover:border-[#DDF3E9] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DDF3E9]"
               >
                 <Globe className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link
                 to="/campaigns"
-                aria-label="Share VidaCare Campaigns"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:border-[#16A085] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085]"
+                aria-label="Explore VidaCare Campaigns"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white transition-colors hover:border-[#DDF3E9] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DDF3E9]"
               >
                 <Share2 className="h-4 w-4" aria-hidden="true" />
               </Link>
               <a
                 href="mailto:support@vidacare.org"
                 aria-label="Email VidaCare Support"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition-colors hover:border-[#16A085] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16A085]"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white transition-colors hover:border-[#DDF3E9] hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DDF3E9]"
               >
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </a>
@@ -52,10 +51,10 @@ export const Footer: React.FC = () => {
           {/* Navigation & Contact Details */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:col-span-7">
             <div className="flex flex-col gap-3">
-              <h3 className="text-xs font-semibold tracking-[0.12em] text-[#DDF3E9] uppercase">
+              <h3 className="text-[11px] font-semibold tracking-[0.14em] text-[#DDF3E9] uppercase">
                 Explore
               </h3>
-              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/80">
+              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/85">
                 <li>
                   <Link to="/" className="transition-colors hover:text-white">
                     Home
@@ -67,8 +66,8 @@ export const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#how-it-works" className="transition-colors hover:text-white">
-                    How It Works
+                  <Link to="/start-fundraiser" className="transition-colors hover:text-white">
+                    Start a Fundraiser
                   </Link>
                 </li>
                 <li>
@@ -85,45 +84,45 @@ export const Footer: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <h3 className="text-xs font-semibold tracking-[0.12em] text-[#DDF3E9] uppercase">
-                Account
+              <h3 className="text-[11px] font-semibold tracking-[0.14em] text-[#DDF3E9] uppercase">
+                Portals
               </h3>
-              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/80">
+              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/85">
                 <li>
                   <Link to="/login" className="transition-colors hover:text-white">
-                    Login
+                    Sign In
                   </Link>
                 </li>
                 <li>
                   <Link to="/signup" className="transition-colors hover:text-white">
-                    Get Started
+                    Create Account
                   </Link>
                 </li>
                 <li>
-                  <Link to="/dashboard" className="transition-colors hover:text-white">
-                    Dashboard
+                  <Link to="/dashboard/donor" className="transition-colors hover:text-white">
+                    Donor Impact Portal
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/dashboard/campaigner" className="transition-colors hover:text-white">
+                    Campaigner Portal
                   </Link>
                 </li>
                 <li>
                   <Link to="/admin" className="transition-colors hover:text-white">
-                    Admin Portal
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="transition-colors hover:text-white">
-                    Contact
+                    Clinical Console
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="col-span-2 flex flex-col gap-3 sm:col-span-1">
-              <h3 className="text-xs font-semibold tracking-[0.12em] text-[#DDF3E9] uppercase">
-                Contact Desk
+              <h3 className="text-[11px] font-semibold tracking-[0.14em] text-[#DDF3E9] uppercase">
+                Care Liaison Desk
               </h3>
-              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/80">
+              <ul className="flex flex-col gap-2.5 text-sm text-[#DDF3E9]/85">
                 <li className="flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5 shrink-0 text-[#16A085]" aria-hidden="true" />
+                  <Mail className="h-3.5 w-3.5 shrink-0 text-[#DDF3E9]" aria-hidden="true" />
                   <a
                     href="mailto:support@vidacare.org"
                     className="truncate transition-colors hover:text-white"
@@ -132,23 +131,32 @@ export const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone className="h-3.5 w-3.5 shrink-0 text-[#16A085]" aria-hidden="true" />
-                  <span className="font-mono text-xs tabular-nums">+1 (800) 555-0194</span>
+                  <Phone className="h-3.5 w-3.5 shrink-0 text-[#DDF3E9]" aria-hidden="true" />
+                  <span className="vc-numeric text-xs">+1 (800) 555-0194</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#16A085]" aria-hidden="true" />
-                  <span className="text-xs leading-relaxed text-[#DDF3E9]/80">
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#DDF3E9]" aria-hidden="true" />
+                  <span className="text-xs leading-relaxed text-[#DDF3E9]/85">
                     240 Beacon Clinical Way, Boston, MA
                   </span>
+                </li>
+                <li>
+                  <Link to="/contact" className="text-xs font-semibold text-white underline-offset-4 hover:underline">
+                    Contact Liaison Team
+                  </Link>
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-[#DDF3E9]/75 sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} VidaCare Medical Foundation. All rights reserved.</p>
-          <p>Direct-to-care medical crowdfunding standard.</p>
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/15 pt-6 text-xs text-[#DDF3E9]/85 sm:flex-row sm:items-center">
+          <p className="text-[#DDF3E9]/85">
+            © {new Date().getFullYear()} VidaCare Medical Foundation. All rights reserved.
+          </p>
+          <p className="text-[#DDF3E9]/85">
+            Direct-to-care medical crowdfunding standard.
+          </p>
         </div>
       </div>
     </footer>
